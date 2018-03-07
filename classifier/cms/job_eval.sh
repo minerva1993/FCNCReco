@@ -1,6 +1,5 @@
 #!/bin/bash
-#declare -a arr=("ttbb" "ttbj" "ttcc" "ttLF" "ttother" "TopHct" "AntiTopHct" "tchannel" "tbarchannel" "tWchannel" "tbarWchannel" "wjetsV2_part1" "wjetsV2_part2" "zjets" "zz" "ww" "wz")
-declare -a arr=("zjets10to50V2_part1" "zjets10to50V2_part2" "zjets10to50V2_part3")
+#declare -a arr=("ttbb" "ttbj" "ttcc" "ttLF" "ttother" "TopHct" "AntiTopHct" "TopHut" "AntiTopHut" "tchannel" "tbarchannel" "tWchannel" "tbarWchannel" "zjets10to50V2_part1" "zjets10to50V2_part2" "zjets10to50V2_part3" "wjetsV2_part1" "wjetsV2_part2" "zjets" "zz" "ww" "wz")
 
 cd /cms/ldap_home/minerva1993/catTools/CMSSW_9_4_0_pre3
 eval `scram runtime -sh`
