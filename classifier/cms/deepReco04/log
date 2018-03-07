@@ -1,0 +1,23 @@
+                         : Some more output
+                         : 
+                         : Evaluation results ranked by best signal efficiency and purity (area)
+                         : -------------------------------------------------------------------------------------------------------------------
+                         : DataSet       MVA                       
+                         : Name:         Method:          ROC-integ
+                         : deepReco04    BDT            : 0.954
+                         : -------------------------------------------------------------------------------------------------------------------
+                         : 
+                         : Testing efficiency compared to training efficiency (overtraining check)
+                         : -------------------------------------------------------------------------------------------------------------------
+                         : DataSet              MVA              Signal efficiency: from test sample (from training sample) 
+                         : Name:                Method:          @B=0.01             @B=0.10            @B=0.30   
+                         : -------------------------------------------------------------------------------------------------------------------
+                         : deepReco04           BDT            : 0.321 (0.450)       0.882 (0.902)      0.984 (0.983)
+                         : -------------------------------------------------------------------------------------------------------------------
+                         : 
+Dataset:deepReco04       : Created tree 'TestTree' with 8729 events
+                         : 
+Dataset:deepReco04       : Created tree 'TrainTree' with 35000 events
+                         : 
+Factory                  : Thank you for using TMVA!
+                         : For citation information, please visit: http://tmva.sf.net/citeTMVA.html
