@@ -12,4 +12,4 @@ hadd ref_ttbb.root assign$VER/assign_deepReco_ttbb_*
 hadd ref_ttbj.root assign$VER/assign_deepReco_ttbj_*
 hadd ref_ttcc.root assign$VER/assign_deepReco_ttcc_*
 hadd ref_ttLF.root assign$VER/assign_deepReco_ttLF_*
-hadd ref_tttother.root assign$VER/assign_deepReco_ttother_*
+hadd ref_ttother.root assign$VER/assign_deepReco_ttother_*
