@@ -1,3 +1,5 @@
+#!/bin/sh
+
 declare -A arr
 arr["tchannel"]="SingleTop_t" arr["tbarchannel"]="SingleTbar_t" arr["tWchannel"]="SingleTop_tW" arr["tbarWchannel"]="SingleTbar_tW"
 arr["zjets"]="DYJets" arr["zjets10to50V2_part1"]="DYJets_10to50_part1" arr["zjets10to50V2_part2"]="DYJets_10to50_part2" arr["zjets10to50V2_part3"]="DYJets_10to50_part3"
@@ -14,7 +16,7 @@ cd -
 MAX=134
 NPERJOB=1
 
-INPUTDIR="/xrootd/store/user/minerva1993/ntuple_jw/2016/v4/production"
+INPUTDIR="root://cms-xrdr.sdfarm.kr:1094//xrd/store/user/minerva1993/ntuple_jw/2016/v4/production"
 
 BEGIN=$(($1*$NPERJOB))
 for key in "${!arr[@]}"; do

@@ -1,5 +1,7 @@
+#!/bin/sh
+
 declare -A arr
-arr["ttbb"] = "TT_powheg_ttbb" arr["ttbj"]="TT_powheg_ttbj" arr["ttcc"]="TT_powheg_ttcc"
+arr["ttbb"]="TT_powheg_ttbb" arr["ttbj"]="TT_powheg_ttbj" arr["ttcc"]="TT_powheg_ttcc"
 arr["ttLF"]="TT_powheg_ttlf"
 arr["ttother"]="TT_powheg_ttother"
 arr["TopHct"]="signalReco/TT_TopLeptonicDecay_TH_1L3B_Eta_Hct" arr["AntiTopHct"]="signalReco/TT_AntitopLeptonicDecay_TH_1L3B_Eta_Hct" arr["TopHut"]="signalReco/TT_TopLeptonicDecay_TH_1L3B_Eta_Hut" arr["AntiTopHut"]="signalReco/TT_AntitopLeptonicDecay_TH_1L3B_Eta_Hut"
@@ -11,13 +13,13 @@ cd -
 MAX=96
 NPERJOB=1
 
-INPUTDIR="/xrootd/store/user/minerva1993/ntuple_jw/2016/v4/production"
+INPUTDIR="root://cms-xrdr.sdfarm.kr:1094//xrd/store/user/minerva1993/ntuple_jw/2016/v4/production"
 
 BEGIN=$(($1*$NPERJOB))
 for key in "${!arr[@]}"; do
   for i in `seq $BEGIN $(($BEGIN+$NPERJOB-1))`; do
       [ $i -ge $MAX ] && break
-      filename='"Tree_ttbbLepJets_'${i}'.root"'
+      filename='Tree_ttbbLepJets_'${i}'.root'
       outname=${key}'_'${i}
       python runtt.py ${INPUTDIR} ${arr[${key}]} ${filename} ${outname}
   done

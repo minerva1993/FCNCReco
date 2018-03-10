@@ -180,15 +180,17 @@ void MyAnalysis::SlaveBegin(TTree * /*tree*/)
       }
     }
 
-    assignF = new TFile(Form("assign/ref_%s.root", option.Data()), "READ");
+    assignF = new TFile(Form("../classifier/cms/assign04/assign_deepReco_%s.root", option.Data()), "READ");
     assignT = (TTree*) assignF->Get("tree");
     int nevt = assignT->GetEntries();
-    for(int i = 0; i < nevt; i++){
-      assignT->GetEntry(i);
-      double pt = assignT->GetLeaf("leptonPt")->GetValue(0);
-      double met = assignT->GetLeaf("missingET")->GetValue(0);
-      lepPt.push_back(pt);
-      missET.push_back(met);
+    if( nevt > 0){
+      for(int i = 0; i < nevt; i++){
+        assignT->GetEntry(i);
+        double pt = assignT->GetLeaf("leptonPt")->GetValue(0);
+        double met = assignT->GetLeaf("missingET")->GetValue(0);
+        lepPt.push_back(pt);
+        missET.push_back(met);
+      }
     }
 } 
 
@@ -253,7 +255,18 @@ Bool_t MyAnalysis::Process(Long64_t entry)
     bool passmuon = (mode == 0) && (lepton.Pt() > 30) && (abs(lepton.Eta()) <= 2.1);
     bool passelectron = (mode == 1) && (lepton.Pt() > 35) && (abs(lepton.Eta()) <= 2.1);
 
-  if( passmuon || passelectron ){
+  if( option.Contains("DataSingleMu") ){
+    if( !passmuon ) return kTRUE;//RDMu
+    if( passelectron) return kTRUE;//RDMu
+  }
+  else if( option.Contains("DataSingleEG") ){
+    if( !passelectron ) return kTRUE;//RDelec
+    if( passmuon ) return kTRUE;//RDelec
+  }
+  else{
+    if( !passmuon && !passelectron ) return kTRUE;
+  }
+  //if( passmuon || passelectron ){
 
     vector<float> v_cjet_m;
     vector<TLorentzVector> v_bjet_m;
@@ -302,7 +315,7 @@ Bool_t MyAnalysis::Process(Long64_t entry)
     //Jet Assignment
     vector<double>::iterator iter;
     int evtIdx = 0;
-    if( njets >= 4 && nbjets_m >= 2 ){
+    if( njets >= 4 && nbjets_m >= 2 && !lepPt.empty() ){
       for( iter = lepPt.begin(); iter != lepPt.end(); iter++){
         if( *iter == static_cast<float>(lepton.Pt()) ){
           int tmpIdx = distance(lepPt.begin(), iter);
@@ -398,7 +411,7 @@ Bool_t MyAnalysis::Process(Long64_t entry)
         }
       }
     }//selection loopa
-  }
+  //}//pass lepton
   evtNum++;
   cout << evtNum << '\r';
   return kTRUE;

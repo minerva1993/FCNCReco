@@ -11,4 +11,4 @@ should_transfer_files = NO
 #error = job_$(Process).err
 #transfer_input_files = job.tar.gz
 
-queue 134
+queue 96

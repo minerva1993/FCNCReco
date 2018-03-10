@@ -89,27 +89,27 @@ tree.Branch('hadtMass'     , hadtMass     , 'hadtMass/D')
 
 
 for i in xrange(totalevt):
-  data_tree.GetEntry(i)
-  Nevt = data_tree.nevt
+  if totalevt == 0: tree.Write()
+  else:
+    data_tree.GetEntry(i)
+    Nevt = data_tree.nevt
 
-  score2[0]        = reader.EvaluateMVA('BDT')
-  nevt[0]          = data_tree.nevt
-  nfile[0]         = data_tree.GetLeaf("file").GetValue(0)
-  EventCategory[0] = data_tree.GetLeaf("EventCategory").GetValue(0)
-  genMatch[0]      = data_tree.genMatch
-  jet0Idx[0]       = data_tree.jet0Idx
-  jet1Idx[0]       = data_tree.jet1Idx
-  jet2Idx[0]       = data_tree.jet2Idx
-  jet3Idx[0]       = data_tree.jet3Idx
-  lepPt[0]         = data_tree.lepton_pt
-  missinget[0]     = data_tree.MET
-  whMass[0]        = data_tree.jet12m
-  leptMass[0]      = data_tree.lepTm
-  hadtMass[0]      = data_tree.hadTm
-
-  #print('processing '+str(Nevt)+'th event', end='\r')
-  
-  tree.Fill()
+    score2[0]        = reader.EvaluateMVA('BDT')
+    nevt[0]          = data_tree.nevt
+    nfile[0]         = data_tree.GetLeaf("file").GetValue(0)
+    EventCategory[0] = data_tree.GetLeaf("EventCategory").GetValue(0)
+    genMatch[0]      = data_tree.genMatch
+    jet0Idx[0]       = data_tree.jet0Idx
+    jet1Idx[0]       = data_tree.jet1Idx
+    jet2Idx[0]       = data_tree.jet2Idx
+    jet3Idx[0]       = data_tree.jet3Idx
+    lepPt[0]         = data_tree.lepton_pt
+    missinget[0]     = data_tree.MET
+    whMass[0]        = data_tree.jet12m
+    leptMass[0]      = data_tree.lepTm
+    hadtMass[0]      = data_tree.hadTm
+    tree.Fill()
+    #print('processing '+str(Nevt)+'th event', end='\r')
 
 target.Write()
 target.Close()

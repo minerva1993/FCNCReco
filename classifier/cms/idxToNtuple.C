@@ -13,7 +13,19 @@ void idxToNtuple::Loop()
   if (fChain == 0) return;
 
   int totevt = fChain->GetMaximum("nevt");
-  cout << totevt << endl;
+  //cout << totevt << endl;
+
+  string fn = fChain->GetCurrentFile()->GetName();
+  string fn2 = "assign_" + fn.substr(70);
+  const char *filename = fn2.c_str();
+  TFile* fout = new TFile(filename, "recreate");
+  TTree* assignT = new TTree("tree", "tree");
+  assignT->SetDirectory(fout);
+  if ( totevt <= 0 ){
+    assignT->Write();
+    fout->Write();
+    //fout->Close();
+  }
 
   double tmpScore[totevt+1];
   double tmpScoreDummy[totevt+1];
@@ -78,17 +90,10 @@ void idxToNtuple::Loop()
   cout <<  matchCount << " , " << dummyCount  << endl;
 
   /////////////////////////////////////////////////
-  string fn = fChain->GetCurrentFile()->GetName();
-  string fn2 = "assign_" + fn.substr(14);
-  const char *filename = fn2.c_str();
-
   double score = -1;
   int idx0, idx1, idx2, idx3;
   double leptonPt, missingET, whMass, lepTopM, hadTopM;
 
-  TFile* fout = new TFile(filename, "recreate");
-  TTree* assignT = new TTree("tree", "tree");
-  assignT->SetDirectory(fout);
   assignT->Branch("score"    , &score    , "score/D");
   assignT->Branch("idx0"     , &idx0     , "idx0/I");
   assignT->Branch("idx1"     , &idx1     , "idx1/I");
