@@ -11,187 +11,194 @@ void MyAnalysis::Begin(TTree * /*tree*/)
 
 void MyAnalysis::SlaveBegin(TTree * /*tree*/)
 {
-   TString option = GetOption();
+  TString option = GetOption();
+
+  string sample = option.Data();
+  if(option.Contains("Data")){
+    if (option.Contains("Hv")) sample.erase(sample.find_first_of("_")-3,string::npos);
+    else sample.erase(sample.find_first_of("_")-1,string::npos);
+  }
+  else sample.erase(sample.find_first_of("_"),string::npos);
+
+  cout << "SlaveBegin" << endl;
+  for(int ich=0; ich < 2; ich++){
+   for(int i=0; i < 11; i++){
    
-   cout << "SlaveBegin" << endl;
-   for(int ich=0; ich < 2; ich++){
-     for(int i=0; i < 11; i++){
-     
-      h_NJet[ich][i] = new TH1D(Form("h_NJet_Ch%i_S%i_%s",ich,i,option.Data()), "Number of jets", 12, 0, 12);
-      h_NJet[ich][i]->SetXTitle("Jet Multiplicity");
-      h_NJet[ich][i]->Sumw2();
-      fOutput->Add(h_NJet[ich][i]);
+    h_NJet[ich][i] = new TH1D(Form("h_NJet_Ch%i_S%i_%s",ich,i,sample.c_str()), "Number of jets", 12, 0, 12);
+    h_NJet[ich][i]->SetXTitle("Jet Multiplicity");
+    h_NJet[ich][i]->Sumw2();
+    fOutput->Add(h_NJet[ich][i]);
 
-      h_NBJetCSVv2M[ich][i] = new TH1D(Form("h_NBJetCSVv2M_Ch%i_S%i_%s",ich,i,option.Data()), "Number of b tagged jets (medium)", 6, 0, 6);
-      h_NBJetCSVv2M[ich][i]->SetXTitle("b-tagged Jet Multiplicity (CSVv2M)");
-      h_NBJetCSVv2M[ich][i]->Sumw2();
-      fOutput->Add(h_NBJetCSVv2M[ich][i]);
+    h_NBJetCSVv2M[ich][i] = new TH1D(Form("h_NBJetCSVv2M_Ch%i_S%i_%s",ich,i,sample.c_str()), "Number of b tagged jets (medium)", 6, 0, 6);
+    h_NBJetCSVv2M[ich][i]->SetXTitle("b-tagged Jet Multiplicity (CSVv2M)");
+    h_NBJetCSVv2M[ich][i]->Sumw2();
+    fOutput->Add(h_NBJetCSVv2M[ich][i]);
 
-      h_NBJetCSVv2T[ich][i] = new TH1D(Form("h_NBJetCSVv2T_Ch%i_S%i_%s",ich,i,option.Data()), "Number of b tagged jets (tight)", 6, 0, 6);
-      h_NBJetCSVv2T[ich][i]->SetXTitle("b-tagged Jet Multiplicity (CSVv2T)");
-      h_NBJetCSVv2T[ich][i]->Sumw2();
-      fOutput->Add(h_NBJetCSVv2T[ich][i]);
+    h_NBJetCSVv2T[ich][i] = new TH1D(Form("h_NBJetCSVv2T_Ch%i_S%i_%s",ich,i,sample.c_str()), "Number of b tagged jets (tight)", 6, 0, 6);
+    h_NBJetCSVv2T[ich][i]->SetXTitle("b-tagged Jet Multiplicity (CSVv2T)");
+    h_NBJetCSVv2T[ich][i]->Sumw2();
+    fOutput->Add(h_NBJetCSVv2T[ich][i]);
 
-      h_NCJetM[ich][i] = new TH1D(Form("h_NCJetM_Ch%i_S%i_%s",ich,i,option.Data()), "Number of c tagged jets", 6, 0, 6);
-      h_NCJetM[ich][i]->SetXTitle("c-tagged Jet Multiplicity (M)");
-      h_NCJetM[ich][i]->Sumw2();
-      fOutput->Add(h_NCJetM[ich][i]);  
+    h_NCJetM[ich][i] = new TH1D(Form("h_NCJetM_Ch%i_S%i_%s",ich,i,sample.c_str()), "Number of c tagged jets", 6, 0, 6);
+    h_NCJetM[ich][i]->SetXTitle("c-tagged Jet Multiplicity (M)");
+    h_NCJetM[ich][i]->Sumw2();
+    fOutput->Add(h_NCJetM[ich][i]);  
 
-      h_MET[ich][i] = new TH1D(Form("h_MET_Ch%i_S%i_%s",ich,i,option.Data()), "MET", 30,0,300);
-      h_MET[ich][i]->SetXTitle("MET (GeV)");
-      h_MET[ich][i]->Sumw2();
-      fOutput->Add(h_MET[ich][i]);
+    h_MET[ich][i] = new TH1D(Form("h_MET_Ch%i_S%i_%s",ich,i,sample.c_str()), "MET", 30,0,300);
+    h_MET[ich][i]->SetXTitle("MET (GeV)");
+    h_MET[ich][i]->Sumw2();
+    fOutput->Add(h_MET[ich][i]);
 
-      h_LepPt[ich][i] = new TH1D(Form("h_LepPt_Ch%i_S%i_%s",ich,i,option.Data()), "Lepton p_{T}", 30,0,300);
-      h_LepPt[ich][i]->SetXTitle("Lepton p_{T} (GeV)");
-      h_LepPt[ich][i]->Sumw2();
-      fOutput->Add(h_LepPt[ich][i]);
+    h_LepPt[ich][i] = new TH1D(Form("h_LepPt_Ch%i_S%i_%s",ich,i,sample.c_str()), "Lepton p_{T}", 30,0,300);
+    h_LepPt[ich][i]->SetXTitle("Lepton p_{T} (GeV)");
+    h_LepPt[ich][i]->Sumw2();
+    fOutput->Add(h_LepPt[ich][i]);
 
-      h_LepPhi[ich][i] = new TH1D(Form("h_LepPhi_Ch%i_S%i_%s",ich,i,option.Data()), "Lepton #phi", 30 ,0 ,3.2);
-      h_LepPhi[ich][i]->SetXTitle("Lepton |#phi|");
-      h_LepPhi[ich][i]->Sumw2();
-      fOutput->Add(h_LepPhi[ich][i]);
+    h_LepPhi[ich][i] = new TH1D(Form("h_LepPhi_Ch%i_S%i_%s",ich,i,sample.c_str()), "Lepton #phi", 30 ,0 ,3.2);
+    h_LepPhi[ich][i]->SetXTitle("Lepton |#phi|");
+    h_LepPhi[ich][i]->Sumw2();
+    fOutput->Add(h_LepPhi[ich][i]);
 
-      h_LepEta[ich][i] = new TH1D(Form("h_LepEta_Ch%i_S%i_%s",ich,i,option.Data()), "Lepton #eta", 30 ,0 ,2.5);
-      h_LepEta[ich][i]->SetXTitle("Lepton |#eta|");
-      h_LepEta[ich][i]->Sumw2();
-      fOutput->Add(h_LepEta[ich][i]);
+    h_LepEta[ich][i] = new TH1D(Form("h_LepEta_Ch%i_S%i_%s",ich,i,sample.c_str()), "Lepton #eta", 30 ,0 ,2.5);
+    h_LepEta[ich][i]->SetXTitle("Lepton |#eta|");
+    h_LepEta[ich][i]->Sumw2();
+    fOutput->Add(h_LepEta[ich][i]);
 
-      h_WMass[ich][i] = new TH1D(Form("h_WMass_Ch%i_S%i_%s",ich,i,option.Data()), "W Mass", 20 ,0 ,200);
-      h_WMass[ich][i]->SetXTitle("Transverse Mass (GeV)");
-      h_WMass[ich][i]->Sumw2();
-      fOutput->Add(h_WMass[ich][i]);
+    h_WMass[ich][i] = new TH1D(Form("h_WMass_Ch%i_S%i_%s",ich,i,sample.c_str()), "W Mass", 20 ,0 ,200);
+    h_WMass[ich][i]->SetXTitle("Transverse Mass (GeV)");
+    h_WMass[ich][i]->Sumw2();
+    fOutput->Add(h_WMass[ich][i]);
 
-      h_cJetPt[ich][i] = new TH1D(Form("h_cJetPt_Ch%i_S%i_%s",ich,i,option.Data()), "leading c jet (medium) pT", 30 , 0 ,300);
-      h_cJetPt[ich][i]->SetXTitle("leading c Jet (medium) pT (GeV)");
-      h_cJetPt[ich][i]->Sumw2();
-      fOutput->Add(h_cJetPt[ich][i]);
+    h_cJetPt[ich][i] = new TH1D(Form("h_cJetPt_Ch%i_S%i_%s",ich,i,sample.c_str()), "leading c jet (medium) pT", 30 , 0 ,300);
+    h_cJetPt[ich][i]->SetXTitle("leading c Jet (medium) pT (GeV)");
+    h_cJetPt[ich][i]->Sumw2();
+    fOutput->Add(h_cJetPt[ich][i]);
 
-      h_DPhi[ich][i] = new TH1D(Form("h_DPhi_Ch%i_S%i_%s",ich,i,option.Data()), "Lepton MET #Delta#phi", 30 ,0 ,3.2);
-      h_DPhi[ich][i]->SetXTitle("|#Delta#phi_{l,MET}|");
-      h_DPhi[ich][i]->Sumw2();
-      fOutput->Add(h_DPhi[ich][i]);
+    h_DPhi[ich][i] = new TH1D(Form("h_DPhi_Ch%i_S%i_%s",ich,i,sample.c_str()), "Lepton MET #Delta#phi", 30 ,0 ,3.2);
+    h_DPhi[ich][i]->SetXTitle("|#Delta#phi_{l,MET}|");
+    h_DPhi[ich][i]->Sumw2();
+    fOutput->Add(h_DPhi[ich][i]);
 
-      h_LepIso[ich][i] = new TH1D(Form("h_LepIso_Ch%i_S%i_%s",ich,i,option.Data()), "LepIso", 20 ,0 ,0.2);
-      h_LepIso[ich][i]->SetXTitle("Relative Isolation");
-      h_LepIso[ich][i]->Sumw2();
-      fOutput->Add(h_LepIso[ich][i]);
+    h_LepIso[ich][i] = new TH1D(Form("h_LepIso_Ch%i_S%i_%s",ich,i,sample.c_str()), "LepIso", 20 ,0 ,0.2);
+    h_LepIso[ich][i]->SetXTitle("Relative Isolation");
+    h_LepIso[ich][i]->Sumw2();
+    fOutput->Add(h_LepIso[ich][i]);
 
-      h_csvv2[ich][i] = new TH1D(Form("h_csvv2_Ch%i_S%i_%s",ich,i,option.Data()), "CSVv2", 20 ,0 ,1);
-      h_csvv2[ich][i]->SetXTitle("CSVv2");
-      h_csvv2[ich][i]->Sumw2();
-      fOutput->Add(h_csvv2[ich][i]);
+    h_csvv2[ich][i] = new TH1D(Form("h_csvv2_Ch%i_S%i_%s",ich,i,sample.c_str()), "CSVv2", 20 ,0 ,1);
+    h_csvv2[ich][i]->SetXTitle("CSVv2");
+    h_csvv2[ich][i]->Sumw2();
+    fOutput->Add(h_csvv2[ich][i]);
 
-      h_cvsl[ich][i] = new TH1D(Form("h_cvsl_Ch%i_S%i_%s",ich,i,option.Data()), "CvsL", 20 , -0.1 ,1);
-      h_cvsl[ich][i]->SetXTitle("CvsL");
-      h_cvsl[ich][i]->Sumw2();
-      fOutput->Add(h_cvsl[ich][i]);
+    h_cvsl[ich][i] = new TH1D(Form("h_cvsl_Ch%i_S%i_%s",ich,i,sample.c_str()), "CvsL", 20 , -0.1 ,1);
+    h_cvsl[ich][i]->SetXTitle("CvsL");
+    h_cvsl[ich][i]->Sumw2();
+    fOutput->Add(h_cvsl[ich][i]);
 
-      h_cvsb[ich][i] = new TH1D(Form("h_cvsb_Ch%i_S%i_%s",ich,i,option.Data()), "CvsB", 20 , 0.08 ,1);
-      h_cvsb[ich][i]->SetXTitle("CvsB");
-      h_cvsb[ich][i]->Sumw2();
-      fOutput->Add(h_cvsb[ich][i]);
+    h_cvsb[ich][i] = new TH1D(Form("h_cvsb_Ch%i_S%i_%s",ich,i,sample.c_str()), "CvsB", 20 , 0.08 ,1);
+    h_cvsb[ich][i]->SetXTitle("CvsB");
+    h_cvsb[ich][i]->Sumw2();
+    fOutput->Add(h_cvsb[ich][i]);
 
-      h_DRFCNHkinLepWMass[ich][i] = new TH1D(Form("h_DRFCNHkinLepWMass_Ch%i_S%i_%s",ich,i,option.Data()), "W Mass (Lep)", 30 , 0, 300);
-      h_DRFCNHkinLepWMass[ich][i]->SetXTitle("W Mass (Lep) (GeV)");
-      h_DRFCNHkinLepWMass[ich][i]->Sumw2();
-      fOutput->Add(h_DRFCNHkinLepWMass[ich][i]);
+    h_DRFCNHkinLepWMass[ich][i] = new TH1D(Form("h_DRFCNHkinLepWMass_Ch%i_S%i_%s",ich,i,sample.c_str()), "W Mass (Lep)", 30 , 0, 300);
+    h_DRFCNHkinLepWMass[ich][i]->SetXTitle("W Mass (Lep) (GeV)");
+    h_DRFCNHkinLepWMass[ich][i]->Sumw2();
+    fOutput->Add(h_DRFCNHkinLepWMass[ich][i]);
 
-      h_DRFCNHkinHadWMass[ich][i] = new TH1D(Form("h_DRFCNHkinHadWMass_Ch%i_S%i_%s",ich,i,option.Data()), "W Mass (Had)", 30, 0, 300);
-      h_DRFCNHkinHadWMass[ich][i]->SetXTitle("W Mass (Had) (GeV)");
-      h_DRFCNHkinHadWMass[ich][i]->Sumw2();
-      fOutput->Add(h_DRFCNHkinHadWMass[ich][i]);
+    h_DRFCNHkinHadWMass[ich][i] = new TH1D(Form("h_DRFCNHkinHadWMass_Ch%i_S%i_%s",ich,i,sample.c_str()), "W Mass (Had)", 30, 0, 300);
+    h_DRFCNHkinHadWMass[ich][i]->SetXTitle("W Mass (Had) (GeV)");
+    h_DRFCNHkinHadWMass[ich][i]->Sumw2();
+    fOutput->Add(h_DRFCNHkinHadWMass[ich][i]);
 
-      h_DRFCNHkinHMass[ich][i] = new TH1D(Form("h_DRFCNHkinHMass_Ch%i_S%i_%s",ich,i,option.Data()), "Higgs Mass (bb)", 30, 0,300);
-      h_DRFCNHkinHMass[ich][i]->SetXTitle("Higgs Mass (GeV)");
-      h_DRFCNHkinHMass[ich][i]->Sumw2();
-      fOutput->Add(h_DRFCNHkinHMass[ich][i]);
+    h_DRFCNHkinHMass[ich][i] = new TH1D(Form("h_DRFCNHkinHMass_Ch%i_S%i_%s",ich,i,sample.c_str()), "Higgs Mass (bb)", 30, 0,300);
+    h_DRFCNHkinHMass[ich][i]->SetXTitle("Higgs Mass (GeV)");
+    h_DRFCNHkinHMass[ich][i]->Sumw2();
+    fOutput->Add(h_DRFCNHkinHMass[ich][i]);
 
-      h_DRFCNHkinDR[ich][i] = new TH1D(Form("h_DRFCNHkinDR_Ch%i_S%i_%s",ich,i,option.Data()), "#Delta R of bb", 30, 0,4);
-      h_DRFCNHkinDR[ich][i]->SetXTitle("#Delta R of b jets from Higgs");
-      h_DRFCNHkinDR[ich][i]->Sumw2();
-      fOutput->Add(h_DRFCNHkinDR[ich][i]);
+    h_DRFCNHkinDR[ich][i] = new TH1D(Form("h_DRFCNHkinDR_Ch%i_S%i_%s",ich,i,sample.c_str()), "#Delta R of bb", 30, 0,4);
+    h_DRFCNHkinDR[ich][i]->SetXTitle("#Delta R of b jets from Higgs");
+    h_DRFCNHkinDR[ich][i]->Sumw2();
+    fOutput->Add(h_DRFCNHkinDR[ich][i]);
 
-      h_DRFCNHkinTopMWb[ich][i] = new TH1D(Form("h_DRFCNHkinTopMWb_Ch%i_S%i_%s",ich,i,option.Data()), "Top Mass (Lep)", 30 , 0, 400);
-      h_DRFCNHkinTopMWb[ich][i]->SetXTitle("Top Mass (Lep) (GeV)");
-      h_DRFCNHkinTopMWb[ich][i]->Sumw2();
-      fOutput->Add(h_DRFCNHkinTopMWb[ich][i]);
+    h_DRFCNHkinTopMWb[ich][i] = new TH1D(Form("h_DRFCNHkinTopMWb_Ch%i_S%i_%s",ich,i,sample.c_str()), "Top Mass (Lep)", 30 , 0, 400);
+    h_DRFCNHkinTopMWb[ich][i]->SetXTitle("Top Mass (Lep) (GeV)");
+    h_DRFCNHkinTopMWb[ich][i]->Sumw2();
+    fOutput->Add(h_DRFCNHkinTopMWb[ich][i]);
 
-      h_DRFCNHkinTopMHc[ich][i] = new TH1D(Form("h_DRFCNHkinTopMHc_Ch%i_S%i_%s",ich,i,option.Data()), "Top Mass from Hc/u", 30, 0, 400);
-      h_DRFCNHkinTopMHc[ich][i]->SetXTitle("Top Mass (Had) (GeV)");
-      h_DRFCNHkinTopMHc[ich][i]->Sumw2();
-      fOutput->Add(h_DRFCNHkinTopMHc[ich][i]);
+    h_DRFCNHkinTopMHc[ich][i] = new TH1D(Form("h_DRFCNHkinTopMHc_Ch%i_S%i_%s",ich,i,sample.c_str()), "Top Mass from Hc/u", 30, 0, 400);
+    h_DRFCNHkinTopMHc[ich][i]->SetXTitle("Top Mass (Had) (GeV)");
+    h_DRFCNHkinTopMHc[ich][i]->Sumw2();
+    fOutput->Add(h_DRFCNHkinTopMHc[ich][i]);
 
-      h_DRFCNHkinHPt[ich][i] = new TH1D(Form("h_DRFCNHkinHPt_Ch%i_S%i_%s",ich,i,option.Data()), "Higgs p_{T}", 30, 0,300);
-      h_DRFCNHkinHPt[ich][i]->SetXTitle("Higgs p_{T} (GeV)");
-      h_DRFCNHkinHPt[ich][i]->Sumw2();
-      fOutput->Add(h_DRFCNHkinHPt[ich][i]);
+    h_DRFCNHkinHPt[ich][i] = new TH1D(Form("h_DRFCNHkinHPt_Ch%i_S%i_%s",ich,i,sample.c_str()), "Higgs p_{T}", 30, 0,300);
+    h_DRFCNHkinHPt[ich][i]->SetXTitle("Higgs p_{T} (GeV)");
+    h_DRFCNHkinHPt[ich][i]->Sumw2();
+    fOutput->Add(h_DRFCNHkinHPt[ich][i]);
 
-      h_DRFCNHkinHdPhi[ich][i] = new TH1D(Form("h_DRFCNHkinHdPhi_Ch%i_S%i_%s",ich,i,option.Data()), "#Delta#phi of bb from Higgs", 30, 0, 3.2);
-      h_DRFCNHkinHdPhi[ich][i]->SetXTitle("|#Delta#phi_{bb}|");
-      h_DRFCNHkinHdPhi[ich][i]->Sumw2();
-      fOutput->Add(h_DRFCNHkinHdPhi[ich][i]);
+    h_DRFCNHkinHdPhi[ich][i] = new TH1D(Form("h_DRFCNHkinHdPhi_Ch%i_S%i_%s",ich,i,sample.c_str()), "#Delta#phi of bb from Higgs", 30, 0, 3.2);
+    h_DRFCNHkinHdPhi[ich][i]->SetXTitle("|#Delta#phi_{bb}|");
+    h_DRFCNHkinHdPhi[ich][i]->Sumw2();
+    fOutput->Add(h_DRFCNHkinHdPhi[ich][i]);
 
-      h_DRFCNHkinHdEta[ich][i] = new TH1D(Form("h_DRFCNHkinHdEta_Ch%i_S%i_%s",ich,i,option.Data()), "#Delta#eta of bb from Higgs", 30, 0, 2.5);
-      h_DRFCNHkinHdEta[ich][i]->SetXTitle("|#Delta#eta_{bb}|");
-      h_DRFCNHkinHdEta[ich][i]->Sumw2();
-      fOutput->Add(h_DRFCNHkinHdEta[ich][i]);
+    h_DRFCNHkinHdEta[ich][i] = new TH1D(Form("h_DRFCNHkinHdEta_Ch%i_S%i_%s",ich,i,sample.c_str()), "#Delta#eta of bb from Higgs", 30, 0, 2.5);
+    h_DRFCNHkinHdEta[ich][i]->SetXTitle("|#Delta#eta_{bb}|");
+    h_DRFCNHkinHdEta[ich][i]->Sumw2();
+    fOutput->Add(h_DRFCNHkinHdEta[ich][i]);
 
-      h_DRFCNHkinHb1CSV[ich][i] = new TH1D(Form("h_DRFCNHkinHb1CSV_Ch%i_S%i_%s",ich,i,option.Data()), "Higgs b_{1} CSVv2", 20, 0.8 ,1);
-      h_DRFCNHkinHb1CSV[ich][i]->SetXTitle("Higgs b_{1} CSVv2 (GeV)");
-      h_DRFCNHkinHb1CSV[ich][i]->Sumw2();
-      fOutput->Add(h_DRFCNHkinHb1CSV[ich][i]);
+    h_DRFCNHkinHb1CSV[ich][i] = new TH1D(Form("h_DRFCNHkinHb1CSV_Ch%i_S%i_%s",ich,i,sample.c_str()), "Higgs b_{1} CSVv2", 20, 0.8 ,1);
+    h_DRFCNHkinHb1CSV[ich][i]->SetXTitle("Higgs b_{1} CSVv2 (GeV)");
+    h_DRFCNHkinHb1CSV[ich][i]->Sumw2();
+    fOutput->Add(h_DRFCNHkinHb1CSV[ich][i]);
 
-      h_DRFCNHkinHb2CSV[ich][i] = new TH1D(Form("h_DRFCNHkinHb2CSV_Ch%i_S%i_%s",ich,i,option.Data()), "Higgs b_{2} CSVv2", 20, 0.8 ,1);
-      h_DRFCNHkinHb2CSV[ich][i]->SetXTitle("Higgs b_{2} CSVv2 (GeV)");
-      h_DRFCNHkinHb2CSV[ich][i]->Sumw2();
-      fOutput->Add(h_DRFCNHkinHb2CSV[ich][i]);
+    h_DRFCNHkinHb2CSV[ich][i] = new TH1D(Form("h_DRFCNHkinHb2CSV_Ch%i_S%i_%s",ich,i,sample.c_str()), "Higgs b_{2} CSVv2", 20, 0.8 ,1);
+    h_DRFCNHkinHb2CSV[ich][i]->SetXTitle("Higgs b_{2} CSVv2 (GeV)");
+    h_DRFCNHkinHb2CSV[ich][i]->Sumw2();
+    fOutput->Add(h_DRFCNHkinHb2CSV[ich][i]);
 
-      h_DRFCNHkinLepTopPt[ich][i] = new TH1D(Form("h_DRFCNHkinLepTopPt_Ch%i_S%i_%s",ich,i,option.Data()), "Top p_{T} (Lep)", 30 , 0, 400);
-      h_DRFCNHkinLepTopPt[ich][i]->SetXTitle("Top p_{T} (Lep) (GeV)");
-      h_DRFCNHkinLepTopPt[ich][i]->Sumw2();
-      fOutput->Add(h_DRFCNHkinLepTopPt[ich][i]);
+    h_DRFCNHkinLepTopPt[ich][i] = new TH1D(Form("h_DRFCNHkinLepTopPt_Ch%i_S%i_%s",ich,i,sample.c_str()), "Top p_{T} (Lep)", 30 , 0, 400);
+    h_DRFCNHkinLepTopPt[ich][i]->SetXTitle("Top p_{T} (Lep) (GeV)");
+    h_DRFCNHkinLepTopPt[ich][i]->Sumw2();
+    fOutput->Add(h_DRFCNHkinLepTopPt[ich][i]);
 
-      h_DRFCNHkinHadTopPt[ich][i] = new TH1D(Form("h_DRFCNHkinHadTopPt_Ch%i_S%i_%s",ich,i,option.Data()), "Top p_{T} (Had)", 30 , 0, 400);
-      h_DRFCNHkinHadTopPt[ich][i]->SetXTitle("Top p_{T} (Had) (GeV)");
-      h_DRFCNHkinHadTopPt[ich][i]->Sumw2();
-      fOutput->Add(h_DRFCNHkinHadTopPt[ich][i]);
+    h_DRFCNHkinHadTopPt[ich][i] = new TH1D(Form("h_DRFCNHkinHadTopPt_Ch%i_S%i_%s",ich,i,sample.c_str()), "Top p_{T} (Had)", 30 , 0, 400);
+    h_DRFCNHkinHadTopPt[ich][i]->SetXTitle("Top p_{T} (Had) (GeV)");
+    h_DRFCNHkinHadTopPt[ich][i]->Sumw2();
+    fOutput->Add(h_DRFCNHkinHadTopPt[ich][i]);
 
-      //GenInfo
-      h_genDR[ich][i] = new TH1D(Form("h_genDR_Ch%i_S%i_%s",ich,i,option.Data()), "Delta R between gen b jets from Higgs", 30, 0, 4);
-      h_genDR[ich][i]->SetXTitle("gen #Delta R");
-      h_genDR[ich][i]->Sumw2();
-      fOutput->Add(h_genDR[ich][i]);
+    //GenInfo
+    h_genDR[ich][i] = new TH1D(Form("h_genDR_Ch%i_S%i_%s",ich,i,sample.c_str()), "Delta R between gen b jets from Higgs", 30, 0, 4);
+    h_genDR[ich][i]->SetXTitle("gen #Delta R");
+    h_genDR[ich][i]->Sumw2();
+    fOutput->Add(h_genDR[ich][i]);
 
-      h_matchDR[ich][i] = new TH1D(Form("h_matchDR_Ch%i_S%i_%s",ich,i,option.Data()), "Delta R between gen matched b jets from Higgs", 30, 1, 4);
-      h_matchDR[ich][i]->SetXTitle("gen matched #Delta R");
-      h_matchDR[ich][i]->Sumw2();
-      fOutput->Add(h_matchDR[ich][i]);
+    h_matchDR[ich][i] = new TH1D(Form("h_matchDR_Ch%i_S%i_%s",ich,i,sample.c_str()), "Delta R between gen matched b jets from Higgs", 30, 1, 4);
+    h_matchDR[ich][i]->SetXTitle("gen matched #Delta R");
+    h_matchDR[ich][i]->Sumw2();
+    fOutput->Add(h_matchDR[ich][i]);
 
-      h_genHm[ich][i] = new TH1D(Form("h_genHm_Ch%i_S%i_%s",ich,i,option.Data()), "Gen Higgs mass", 30, 0, 250);
-      h_genHm[ich][i]->SetXTitle("gen Higgs Mass (GeV)");
-      h_genHm[ich][i]->Sumw2();
-      fOutput->Add(h_genHm[ich][i]);
+    h_genHm[ich][i] = new TH1D(Form("h_genHm_Ch%i_S%i_%s",ich,i,sample.c_str()), "Gen Higgs mass", 30, 0, 250);
+    h_genHm[ich][i]->SetXTitle("gen Higgs Mass (GeV)");
+    h_genHm[ich][i]->Sumw2();
+    fOutput->Add(h_genHm[ich][i]);
 
-      h_matchHm[ich][i] = new TH1D(Form("h_matchHm_Ch%i_S%i_%s",ich,i,option.Data()), "Gen matched Higgs mass", 30, 0, 250);
-      h_matchHm[ich][i]->SetXTitle("gen matched Higgs Mass (GeV)");
-      h_matchHm[ich][i]->Sumw2();
-      fOutput->Add(h_matchHm[ich][i]);
-      }
+    h_matchHm[ich][i] = new TH1D(Form("h_matchHm_Ch%i_S%i_%s",ich,i,sample.c_str()), "Gen matched Higgs mass", 30, 0, 250);
+    h_matchHm[ich][i]->SetXTitle("gen matched Higgs Mass (GeV)");
+    h_matchHm[ich][i]->Sumw2();
+    fOutput->Add(h_matchHm[ich][i]);
     }
+  }
 
-    assignF = new TFile(Form("../classifier/cms/assign04/assign_deepReco_%s.root", option.Data()), "READ");
-    assignT = (TTree*) assignF->Get("tree");
-    int nevt = assignT->GetEntries();
-    if( nevt > 0){
-      for(int i = 0; i < nevt; i++){
-        assignT->GetEntry(i);
-        double pt = assignT->GetLeaf("leptonPt")->GetValue(0);
-        double met = assignT->GetLeaf("missingET")->GetValue(0);
-        lepPt.push_back(pt);
-        missET.push_back(met);
-      }
+  assignF = new TFile(Form("../classifier/cms/assign04/assign_deepReco_%s.root", option.Data()), "READ");
+  assignT = (TTree*) assignF->Get("tree");
+  int nevt = assignT->GetEntries();
+  if( nevt > 0){
+    for(int i = 0; i < nevt; i++){
+      assignT->GetEntry(i);
+      double pt = assignT->GetLeaf("leptonPt")->GetValue(0);
+      double met = assignT->GetLeaf("missingET")->GetValue(0);
+      lepPt.push_back(pt);
+      missET.push_back(met);
     }
+  }
 } 
 
 Bool_t MyAnalysis::Process(Long64_t entry)
@@ -427,7 +434,7 @@ void MyAnalysis::Terminate()
 {
   TString option = GetOption();
 
-  TFile * out = TFile::Open(Form("hist_%s.root",option.Data()),"RECREATE");
+  TFile * out = TFile::Open(Form("temp/hist_%s.root",option.Data()),"UPDATE");
 
    TList * l = GetOutputList();
    TIter next(l);
