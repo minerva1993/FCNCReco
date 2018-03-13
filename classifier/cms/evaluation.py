@@ -15,10 +15,10 @@ filename = sys.argv[2]
 
 # Load data
 
-data = TFile.Open('mkNtuple/j4b2/'+filename)
+data = TFile.Open('root://cms-xrdr.sdfarm.kr:1094//xrd/store/user/minerva1993/reco/ntuple/'+filename)
 data_tree = data.Get('test_tree')
 
-target = TFile('score'+ver+'/score_'+filename,'RECREATE')
+target = TFile.Open('root://cms-xrdr.sdfarm.kr:1094//xrd/store/user/minerva1993/reco/score'+ver+'/score_'+filename,'RECREATE')
 tree = TTree("tree","tree")
 
 branches = {}

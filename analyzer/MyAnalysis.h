@@ -194,7 +194,6 @@ public :
     vector<double> lepPt;
     vector<double> missET;
     vector<double> BDTScore;
-    vector<int> i0;
 
     vector<int> dupCheck;
     int lepcount = 0;

@@ -187,7 +187,7 @@ void MyAnalysis::SlaveBegin(TTree * /*tree*/)
     }
   }
 
-  assignF = new TFile(Form("../classifier/cms/assign04/assign_deepReco_%s.root", option.Data()), "READ");
+  assignF = TFile::Open(Form("root://cms-xrdr.sdfarm.kr:1094//xrd/store/user/minerva1993/reco/assign04/assign_deepReco_%s.root", option.Data()), "READ");
   assignT = (TTree*) assignF->Get("tree");
   int nevt = assignT->GetEntries();
   if( nevt > 0){
@@ -434,7 +434,7 @@ void MyAnalysis::Terminate()
 {
   TString option = GetOption();
 
-  TFile * out = TFile::Open(Form("temp/hist_%s.root",option.Data()),"UPDATE");
+  TFile * out = TFile::Open(Form("root://cms-xrdr.sdfarm.kr:1094///xrd/store/user/minerva1993/reco/tempHist/hist_%s.root",option.Data()),"UPDATE");
 
    TList * l = GetOutputList();
    TIter next(l);

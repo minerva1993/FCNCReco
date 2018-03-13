@@ -16,9 +16,11 @@ void idxToNtuple::Loop()
   //cout << totevt << endl;
 
   string fn = fChain->GetCurrentFile()->GetName();
-  string fn2 = "assign_" + fn.substr(70);
-  const char *filename = fn2.c_str();
-  TFile* fout = new TFile(filename, "recreate");
+  string fn2 = "assign_" + fn.substr(73);
+  string pt = "root://cms-xrdr.sdfarm.kr:1094//xrd/store/user/minerva1993/reco/assign04/";
+  string pt2 = pt + fn2;
+  const char *path = pt2.c_str();
+  TFile* fout = TFile::Open(path, "recreate");
   TTree* assignT = new TTree("tree", "tree");
   assignT->SetDirectory(fout);
   if ( totevt <= 0 ){

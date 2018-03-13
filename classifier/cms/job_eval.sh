@@ -12,6 +12,6 @@ BEGIN=$(($1*$NPERJOB))
 for j in "${arr[@]}"; do
   for i in `seq $BEGIN $(($BEGIN+$NPERJOB-1))`; do
       [ $i -ge $MAX ] && break
-      python evaluation.py 04 deepReco_${j}_${i}.root
+      python evaluation.py 04 deepReco_${j}_${i}.root &
   done
 done

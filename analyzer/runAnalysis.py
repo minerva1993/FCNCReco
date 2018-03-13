@@ -1,8 +1,6 @@
 #!/usr/bin/python
-
 from ROOT import TFile, TChain, gSystem
 import os, sys
-#gROOT.SetBatch(True)
 
 inputdir = sys.argv[1]
 dataset = sys.argv[2]
