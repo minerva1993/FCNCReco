@@ -6,7 +6,10 @@ There is several test steps for compile macros and check if the code is running 
 
   * Make nutples for training, evaluation, assignment.
 
-    cd classifier/cms/mkNtuple
-    cat fileList/file_other1.txt | xargs -i -P$(nproc) -n4 python runother.py
-    cat fileList/file_other2.txt | xargs -i -P$(nproc) -n4 python runother.py
-    cat fileList/file_tt.txt | xargs -i -P$(nproc) -n4 python runtt.py
+  cd classifier/cms/mkNtuple
+
+  cat fileList/file_other1.txt | xargs -i -P$(nproc) -n4 python runother.py
+
+  cat fileList/file_other2.txt | xargs -i -P$(nproc) -n4 python runother.py
+
+  cat fileList/file_tt.txt | xargs -i -P$(nproc) -n4 python runtt.py
