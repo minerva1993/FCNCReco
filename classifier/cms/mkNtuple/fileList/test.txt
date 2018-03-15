@@ -1,0 +1,2 @@
+/data/users/minerva1993/ntuple_Run2016/v4/production signalReco/TT_AntitopLeptonicDecay_TH_1L3B_Eta_Hut Tree_ttbbLepJets_0.root AntiTopHut_0
+/data/users/minerva1993/ntuple_Run2016/v4/production signalReco/TT_AntitopLeptonicDecay_TH_1L3B_Eta_Hut Tree_ttbbLepJets_1.root AntiTopHut_1
