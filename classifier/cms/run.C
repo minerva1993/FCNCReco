@@ -7,8 +7,8 @@ R__LOAD_LIBRARY(idxToNtuple.C+)
 void run( TString name )
 {
 
-  //TString path = "root://cms-xrdr.sdfarm.kr:1094//xrd/store/user/minerva1993/reco/score04/";
-  TFile *f = TFile::Open("root://cms-xrdr.sdfarm.kr:1094//xrd/store/user/minerva1993/reco/score04/"+name, "READ");
+  //TFile *f = TFile::Open("root://cms-xrdr.sdfarm.kr:1094//xrd/store/user/minerva1993/reco/score04/"+name, "READ");
+  TFile *f = TFile::Open("/home/minerva1993/recoFCNC/classifier/cms/score04/"+name, "READ");
   if (f->IsOpen()==kFALSE){
     f->Close();
     gSystem->Exit(0);
@@ -17,7 +17,8 @@ void run( TString name )
 
 
   TChain assign("tree");
-  assign.Add("root://cms-xrdr.sdfarm.kr:1094//xrd/store/user/minerva1993/reco/score04/"+name);
+  //assign.Add("root://cms-xrdr.sdfarm.kr:1094//xrd/store/user/minerva1993/reco/score04/"+name);
+  assign.Add("/home/minerva1993/recoFCNC/classifier/cms/score04/"+name);
 
   idxToNtuple t(&assign);
 

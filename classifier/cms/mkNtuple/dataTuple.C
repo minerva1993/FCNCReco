@@ -331,7 +331,8 @@ void dataTuple::Terminate()
 {
   TString option = GetOption();
 
-    TFile *hfile = TFile::Open(Form("root://cms-xrdr.sdfarm.kr:1094//xrd/store/user/minerva1993/reco/ntuple/deepReco_%s.root",option.Data()), "RECREATE");
+    //TFile *hfile = TFile::Open(Form("root://cms-xrdr.sdfarm.kr:1094//xrd/store/user/minerva1993/reco/ntuple/deepReco_%s.root",option.Data()), "RECREATE");
+    TFile *hfile = TFile::Open(Form("j4b2/deepReco_%s.root",option.Data()), "RECREATE");
 
     fOutput->FindObject("test_tree")->Write();
 
