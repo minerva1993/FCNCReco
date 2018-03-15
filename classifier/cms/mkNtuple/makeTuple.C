@@ -537,11 +537,13 @@ Bool_t makeTuple::Process(Long64_t entry)
   TLorentzVector jetP4[4];
   for ( auto ii0 = jetIdxs.begin(); ii0 != jetIdxs.end(); ++ii0 ){
     //if ( (!option.Contains("Hct") && !option.Contains("Hut")) && jet_CSV[*ii0] < 0.8484 ) continue;
+    //if ( jet_CSV[*ii0] < 0.8484 ) continue; //for ttbar reco signal
     jetP4[0].SetPtEtaPhiE(jet_pT[*ii0], jet_eta[*ii0], jet_phi[*ii0], jet_E[*ii0]);
 
     for ( auto ii1 = jetIdxs.begin(); ii1 != jetIdxs.end(); ++ii1 ) {
       if ( *ii1 == *ii0 ) continue;
       //if ( (!option.Contains("Hct") && !option.Contains("Hut")) && jet_CSV[*ii1] < 0.8484 ) continue;
+      //if ( jet_CSV[*ii1] < 0.8484 ) continue; //for ttbar reco signal
       jetP4[3].SetPtEtaPhiE(jet_pT[*ii1], jet_eta[*ii1], jet_phi[*ii1], jet_E[*ii1]);
 
       for ( auto ii2 = jetIdxs.begin(); ii2 != jetIdxs.end(); ++ii2 ) {

@@ -20,6 +20,12 @@ cat fileList/file_other1.txt | xargs -i -P$(nproc) -n4 python runother.py
 cat fileList/file_other2.txt | xargs -i -P$(nproc) -n4 python runother.py
 cat fileList/file_tt.txt | xargs -i -P$(nproc) -n4 python runtt.py
 ```
+To make ttbar reco signals, change out directory in makeTuple.C and run
+```{.Bash}
+cat fileList/file_recoTTsig1.txt | xargs -i -P$(nproc) -n4 python runtt.py
+cat fileList/file_recoTTsig2.txt | xargs -i -P$(nproc) -n4 python runtt.py
+cat fileList/file_recoTTsig3.txt | xargs -i -P$(nproc) -n4 python runtt.py
+```
 
   * Evaluate classifier
 ```{.Bash}
