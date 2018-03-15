@@ -275,6 +275,12 @@ Bool_t dataTuple::Process(Long64_t entry)
           //count++;
 
           //construct particles: lepB = j0, hadB = j3, hadW = j1+j2
+          if( !option.Contains("Data") ){
+            jetP4[0] = jetP4[0] * jet_JER_Nom[*ii0];
+            jetP4[1] = jetP4[1] * jet_JER_Nom[*ii3];
+            jetP4[2] = jetP4[2] * jet_JER_Nom[*ii2];
+            jetP4[3] = jetP4[3] * jet_JER_Nom[*ii1];
+          }
           b_jet0pt = jetP4[0].Pt(); b_jet0eta = jetP4[0].Eta(); b_jet0phi = jetP4[0].Phi(); b_jet0m = jetP4[0].M();
           b_jet1pt = jetP4[1].Pt(); b_jet1eta = jetP4[1].Eta(); b_jet1phi = jetP4[1].Phi(); b_jet1m = jetP4[1].M();
           b_jet2pt = jetP4[2].Pt(); b_jet2eta = jetP4[2].Eta(); b_jet2phi = jetP4[2].Phi(); b_jet2m = jetP4[2].M();

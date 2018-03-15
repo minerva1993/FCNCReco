@@ -345,6 +345,13 @@ else{
     jetP4s[2].SetPtEtaPhiE(jet_pT[i2], jet_eta[i2], jet_phi[i2], jet_E[i2]);
     jetP4s[3].SetPtEtaPhiE(jet_pT[i3], jet_eta[i3], jet_phi[i3], jet_E[i3]);
 
+    if( !option.Contains("Data") ){
+      jetP4s[0] = jetP4s[0] * jet_JER_Nom[i0];
+      jetP4s[1] = jetP4s[1] * jet_JER_Nom[i1];
+      jetP4s[2] = jetP4s[2] * jet_JER_Nom[i2];
+      jetP4s[3] = jetP4s[3] * jet_JER_Nom[i3];
+    }
+
     if( option.Contains("Hct") || option.Contains("Hut") ){
       if(hbjet1.DeltaR(jetP4s[1]) < 0.4 or hbjet1.DeltaR(jetP4s[2]) < 0.4) match1 = true;
       if(hbjet2.DeltaR(jetP4s[1]) < 0.4 or hbjet2.DeltaR(jetP4s[2]) < 0.4) match2 = true;

@@ -537,29 +537,35 @@ Bool_t makeTuple::Process(Long64_t entry)
   TLorentzVector jetP4[4];
   for ( auto ii0 = jetIdxs.begin(); ii0 != jetIdxs.end(); ++ii0 ){
     //if ( (!option.Contains("Hct") && !option.Contains("Hut")) && jet_CSV[*ii0] < 0.8484 ) continue;
-    //if ( jet_CSV[*ii0] < 0.8484 ) continue; //for ttbar reco signal
+    if ( jet_CSV[*ii0] < 0.8484 ) continue; //for ttbar reco signal
     jetP4[0].SetPtEtaPhiE(jet_pT[*ii0], jet_eta[*ii0], jet_phi[*ii0], jet_E[*ii0]);
 
     for ( auto ii1 = jetIdxs.begin(); ii1 != jetIdxs.end(); ++ii1 ) {
       if ( *ii1 == *ii0 ) continue;
       //if ( (!option.Contains("Hct") && !option.Contains("Hut")) && jet_CSV[*ii1] < 0.8484 ) continue;
-      //if ( jet_CSV[*ii1] < 0.8484 ) continue; //for ttbar reco signal
+      if ( jet_CSV[*ii1] < 0.8484 ) continue; //for ttbar reco signal
       jetP4[3].SetPtEtaPhiE(jet_pT[*ii1], jet_eta[*ii1], jet_phi[*ii1], jet_E[*ii1]);
 
       for ( auto ii2 = jetIdxs.begin(); ii2 != jetIdxs.end(); ++ii2 ) {
         if ( *ii2 == *ii0 or *ii2 == *ii1 ) continue;
         //if ( (option.Contains("Hct") || option.Contains("Hut")) && jet_CSV[*ii2] < 0.8484 ) continue;//fcnc
-        if ( jet_CSV[*ii2] < 0.8484 ) continue;
+        //if ( jet_CSV[*ii2] < 0.8484 ) continue;
         jetP4[2].SetPtEtaPhiE(jet_pT[*ii2], jet_eta[*ii2], jet_phi[*ii2], jet_E[*ii2]);
 
         for ( auto ii3 = ii2+1; ii3 != jetIdxs.end(); ++ii3 ) {
           if ( *ii3 == *ii0 or *ii3 == *ii1 or *ii3 == *ii2 ) continue;
           //if ( (option.Contains("Hct") || option.Contains("Hut")) && jet_CSV[*ii3] < 0.8484 ) continue;//fcnc
-          if ( jet_CSV[*ii3] < 0.8484 ) continue;
+          //if ( jet_CSV[*ii3] < 0.8484 ) continue;
           jetP4[1].SetPtEtaPhiE(jet_pT[*ii3], jet_eta[*ii3], jet_phi[*ii3], jet_E[*ii3]);
           //count++;
 
           //construct particles: lepB = j0, hadB = j3, hadW = j1+j2
+          if( !option.Contains("Data") ){
+            jetP4[0] = jetP4[0] * jet_JER_Nom[*ii0];
+            jetP4[1] = jetP4[1] * jet_JER_Nom[*ii3];
+            jetP4[2] = jetP4[2] * jet_JER_Nom[*ii2];
+            jetP4[3] = jetP4[3] * jet_JER_Nom[*ii1];
+          }
           b_jet0pt = jetP4[0].Pt(); b_jet0eta = jetP4[0].Eta(); b_jet0phi = jetP4[0].Phi(); b_jet0m = jetP4[0].M();
           b_jet1pt = jetP4[1].Pt(); b_jet1eta = jetP4[1].Eta(); b_jet1phi = jetP4[1].Phi(); b_jet1m = jetP4[1].M();
           b_jet2pt = jetP4[2].Pt(); b_jet2eta = jetP4[2].Eta(); b_jet2phi = jetP4[2].Phi(); b_jet2m = jetP4[2].M();
@@ -635,7 +641,8 @@ void makeTuple::Terminate()
   TString option = GetOption();
 
     //TFile *hfile = TFile::Open(Form("root://cms-xrdr.sdfarm.kr:1094//xrd/store/user/minerva1993/reco/ntuple/deepReco_%s.root",option.Data()), "RECREATE");
-    TFile *hfile = TFile::Open(Form("j4b2/deepReco_%s.root",option.Data()), "RECREATE");
+    //TFile *hfile = TFile::Open(Form("j4b2/deepReco_%s.root",option.Data()), "RECREATE"); //FCNC
+    TFile *hfile = TFile::Open(Form("j4b2_tt/deepReco_%s.root",option.Data()), "RECREATE"); //ttbar
 
     fOutput->FindObject("sig_tree")->Write();
     fOutput->FindObject("bkg_tree")->Write();

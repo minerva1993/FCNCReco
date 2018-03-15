@@ -16,11 +16,13 @@ You can use job.sh from legacy folders to write down out names as well as file p
 ```{.Bash}
 ssh compute-0-1 #(compute-0-2, compute-0-3)
 cd classifier/cms/mkNtuple
+python runother.py /data/users/minerva1993/ntuple_Run2016/v4/production SingleTbar_t Tree_ttbbLepJets_0.root tbarchannel_0 #check compile
+python runtt.py /data/users/minerva1993/ntuple_Run2016/v4/production TT_powheg_ttbj Tree_ttbbLepJets_0.root ttbj_0 #check compile
 cat fileList/file_other1.txt | xargs -i -P$(nproc) -n4 python runother.py
 cat fileList/file_other2.txt | xargs -i -P$(nproc) -n4 python runother.py
 cat fileList/file_tt.txt | xargs -i -P$(nproc) -n4 python runtt.py
 ```
-To make ttbar reco signals, change out directory in makeTuple.C and run
+To make ttbar reco signals, change output directory in makeTuple.C, modify b tagging restrictions, and run
 ```{.Bash}
 cat fileList/file_recoTTsig1.txt | xargs -i -P$(nproc) -n4 python runtt.py
 cat fileList/file_recoTTsig2.txt | xargs -i -P$(nproc) -n4 python runtt.py
@@ -49,7 +51,7 @@ cat fileList/file_assign3.txt | xargs -i -P$(nproc) -n1 root -l -b run.C'("{}")'
   * Histograms
 ```{.Bash}
 cd analyzer
-python runAnalysis.py /path/to/ntuple signalReco/TT_AntitopLeptonicDecay_TH_1L3B_Eta_Hut Tree_ttbbLepJets_0.root AntiTopHut_0 #Test main analyzer code
+python runAnalysis.py /data/users/minerva1993/ntuple_Run2016/v4/production signalReco/TT_AntitopLeptonicDecay_TH_1L3B_Eta_Hut Tree_ttbbLepJets_0.root AntiTopHut_0 #Test main analyzer code
 cat fileList/file_other1.txt | xargs -i -P$(nproc) -n4 python runAnalysis.py #This list is a copy from mkNtuple
 cat fileList/file_other2.txt | xargs -i -P$(nproc) -n4 python runAnalysis.py
 cat fileList/file_tt.txt | xargs -i -P$(nproc) -n4 python runAnalysis.py
