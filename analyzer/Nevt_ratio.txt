@@ -612,9 +612,9 @@ hist_TopHct :  Hct = 7481.572239
 hist_AntiTopHct :  Hct = 7505.134932 
 hist_TopHut :  Hut = 7573.705097 
 hist_AntiTopHut :  Hut = 7542.044767 
-ntotal = 108801961.711662 
+ntotal = 108801961.711663 
 ndata = 124280940 
-nsub = 15478978.288338 
+nsub = 15478978.288337 
 ['h', 'NBJetCSVv2M', 'Ch1', 'S0', 'DataSingleEG'] 
 ['h', 'NBJetCSVv2T', 'Ch1', 'S0', 'DataSingleEG'] 
 ['h', 'NCJetM', 'Ch1', 'S0', 'DataSingleEG'] 

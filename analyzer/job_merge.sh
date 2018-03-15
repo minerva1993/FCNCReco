@@ -1,9 +1,5 @@
 #!/bin/sh
 
-cd /cms/ldap_home/minerva1993/catTools/CMSSW_9_4_0_pre3
-eval `scram runtime -sh`
-cd -
-
 rm hist_*.root
 hadd hist_TopHct.root temp/hist_TopHct_*.root
 hadd hist_AntiTopHct.root temp/hist_AntiTopHct_*.root
