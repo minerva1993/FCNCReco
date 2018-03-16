@@ -167,19 +167,19 @@ public :
     TH1D *h_cvsb[2][11];
 
     //DR
-    TH1D *h_DRFCNHkinLepWMass[2][11];
-    TH1D *h_DRFCNHkinHadWMass[2][11];
-    TH1D *h_DRFCNHkinHMass[2][11];
-    TH1D *h_DRFCNHkinDR[2][11];
-    TH1D *h_DRFCNHkinTopMWb[2][11];
-    TH1D *h_DRFCNHkinTopMHc[2][11];
-    TH1D *h_DRFCNHkinHPt[2][11];
-    TH1D *h_DRFCNHkinHdPhi[2][11];
-    TH1D *h_DRFCNHkinHdEta[2][11];
-    TH1D *h_DRFCNHkinHb1CSV[2][11];
-    TH1D *h_DRFCNHkinHb2CSV[2][11];
-    TH1D *h_DRFCNHkinLepTopPt[2][11];
-    TH1D *h_DRFCNHkinHadTopPt[2][11];
+    TH1D *h_FCNHkinLepWMass[2][11];
+    TH1D *h_FCNHkinHadWMass[2][11];
+    TH1D *h_FCNHkinHMass[2][11];
+    TH1D *h_FCNHkinDR[2][11];
+    TH1D *h_FCNHkinTopMWb[2][11];
+    TH1D *h_FCNHkinTopMHc[2][11];
+    TH1D *h_FCNHkinHPt[2][11];
+    TH1D *h_FCNHkinHdPhi[2][11];
+    TH1D *h_FCNHkinHdEta[2][11];
+    TH1D *h_FCNHkinHb1CSV[2][11];
+    TH1D *h_FCNHkinHb2CSV[2][11];
+    TH1D *h_FCNHkinLepTopPt[2][11];
+    TH1D *h_FCNHkinHadTopPt[2][11];
 
     TH1D *h_genDR[2][11];
     TH1D *h_matchDR[2][11];
