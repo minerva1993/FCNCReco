@@ -17,110 +17,110 @@ void dataTuple::SlaveBegin(TTree * /*tree*/)
     //////////////////////////////////////////////////////////////////
     testTree = new TTree("test_tree","background tree");
 
-    testTree->Branch("nevt", &b_nevt, "nevt/I");
-    testTree->Branch("file",  &b_file, "file/I");
-    testTree->Branch("GoodPV", &b_GoodPV, "GoodPV/I");
+    testTree->Branch("nevt"         , &b_nevt         , "nevt/I");
+    testTree->Branch("file"         , &b_file         , "file/I");
+    testTree->Branch("GoodPV"       , &b_GoodPV       , "GoodPV/I");
     testTree->Branch("EventCategory", &b_EventCategory, "EventCategory/I");
-    testTree->Branch("genMatch", &b_genMatch, "genMatch/I");
-    testTree->Branch("EventWeight", &b_EventWeight, "EventWeight/F");
+    testTree->Branch("genMatch"     , &b_genMatch     , "genMatch/I");
+    testTree->Branch("EventWeight"  , &b_EventWeight  , "EventWeight/F");
     
-    testTree->Branch("njets", &b_njets, "njets/I");
-    testTree->Branch("nbjets_m", &b_nbjets_m, "nbjets_m/I");
+    testTree->Branch("njets"     , &b_njets     , "njets/I");
+    testTree->Branch("nbjets_m"  , &b_nbjets_m  , "nbjets_m/I");
     testTree->Branch("lepton_pt" , &b_lepton_pt , "lepton_pt/F");
     testTree->Branch("lepton_eta", &b_lepton_eta, "lepton_eta/F");
     testTree->Branch("lepton_phi", &b_lepton_phi, "lepton_phi/F");
-    testTree->Branch("MET", &b_met, "MET/F");
-    testTree->Branch("MET_phi", &b_met_phi, "MET_phi/F");
-    testTree->Branch("lepDPhi", &b_lepdphi, "lepDPhi/F");
+    testTree->Branch("MET"       , &b_met       , "MET/F");
+    testTree->Branch("MET_phi"   , &b_met_phi   , "MET_phi/F");
+    testTree->Branch("lepDPhi"   , &b_lepdphi   , "lepDPhi/F");
 
     //jet assignment
-    testTree->Branch("jet0pt", &b_jet0pt, "jet0pt/F");
-    testTree->Branch("jet0eta", &b_jet0eta, "jet0eta/F");
-    testTree->Branch("jet0phi", &b_jet0phi, "jet0phi/F");
-    testTree->Branch("jet0m", &b_jet0m, "jet0m/F");
-    testTree->Branch("jet0csv", &b_jet0csv, "jet0csv/F");
+    testTree->Branch("jet0pt"  , &b_jet0pt  , "jet0pt/F");
+    testTree->Branch("jet0eta" , &b_jet0eta , "jet0eta/F");
+    testTree->Branch("jet0phi" , &b_jet0phi , "jet0phi/F");
+    testTree->Branch("jet0m"   , &b_jet0m   , "jet0m/F");
+    testTree->Branch("jet0csv" , &b_jet0csv , "jet0csv/F");
     testTree->Branch("jet0cvsl", &b_jet0cvsl, "jet0cvsl/F");
     testTree->Branch("jet0cvsb", &b_jet0cvsb, "jet0cvsb/F");
-    testTree->Branch("jet0Idx", &b_jet0Idx, "jet0Idx/I");
+    testTree->Branch("jet0Idx" , &b_jet0Idx , "jet0Idx/I");
 
-    testTree->Branch("jet1pt",&b_jet1pt, "jet1pt/F");
-    testTree->Branch("jet1eta",&b_jet1eta, "jet1eta/F");
-    testTree->Branch("jet1phi",&b_jet1phi, "jet1phi/F");
-    testTree->Branch("jet1m",&b_jet1m, "jet1m/F");
-    testTree->Branch("jet1csv", &b_jet1csv, "jet1csv/F");
+    testTree->Branch("jet1pt"  , &b_jet1pt  , "jet1pt/F");
+    testTree->Branch("jet1eta" , &b_jet1eta , "jet1eta/F");
+    testTree->Branch("jet1phi" , &b_jet1phi , "jet1phi/F");
+    testTree->Branch("jet1m"   , &b_jet1m   , "jet1m/F");
+    testTree->Branch("jet1csv" , &b_jet1csv , "jet1csv/F");
     testTree->Branch("jet1cvsl", &b_jet1cvsl, "jet1cvsl/F");
     testTree->Branch("jet1cvsb", &b_jet1cvsb, "jet1cvsb/F");
-    testTree->Branch("jet1Idx", &b_jet1Idx, "jet1Idx/I");
+    testTree->Branch("jet1Idx" , &b_jet1Idx , "jet1Idx/I");
 
-    testTree->Branch("jet2pt",&b_jet2pt, "jet2pt/F");
-    testTree->Branch("jet2eta",&b_jet2eta, "jet2eta/F");
-    testTree->Branch("jet2phi",&b_jet2phi, "jet2phi/F");
-    testTree->Branch("jet2m",&b_jet2m, "jet2m/F");
-    testTree->Branch("jet2csv", &b_jet2csv, "jet2csv/F");
+    testTree->Branch("jet2pt"  , &b_jet2pt  , "jet2pt/F");
+    testTree->Branch("jet2eta" , &b_jet2eta , "jet2eta/F");
+    testTree->Branch("jet2phi" , &b_jet2phi , "jet2phi/F");
+    testTree->Branch("jet2m"   , &b_jet2m   , "jet2m/F");
+    testTree->Branch("jet2csv" , &b_jet2csv , "jet2csv/F");
     testTree->Branch("jet2cvsl", &b_jet2cvsl, "jet2cvsl/F");
     testTree->Branch("jet2cvsb", &b_jet2cvsb, "jet2cvsb/F");
-    testTree->Branch("jet2Idx", &b_jet2Idx, "jet2Idx/I");
+    testTree->Branch("jet2Idx" , &b_jet2Idx , "jet2Idx/I");
 
-    testTree->Branch("jet3pt",&b_jet3pt, "jet3pt/F");
-    testTree->Branch("jet3eta",&b_jet3eta, "jet3eta/F");
-    testTree->Branch("jet3phi",&b_jet3phi, "jet3phi/F");
-    testTree->Branch("jet3m",&b_jet3m, "jet3m/F");
-    testTree->Branch("jet3csv", &b_jet3csv, "jet3csv/F");
+    testTree->Branch("jet3pt"  , &b_jet3pt  , "jet3pt/F");
+    testTree->Branch("jet3eta" , &b_jet3eta , "jet3eta/F");
+    testTree->Branch("jet3phi" , &b_jet3phi , "jet3phi/F");
+    testTree->Branch("jet3m"   , &b_jet3m   , "jet3m/F");
+    testTree->Branch("jet3csv" , &b_jet3csv , "jet3csv/F");
     testTree->Branch("jet3cvsl", &b_jet3cvsl, "jet3cvsl/F");
     testTree->Branch("jet3cvsb", &b_jet3cvsb, "jet3cvsb/F");
-    testTree->Branch("jet3Idx", &b_jet3Idx, "jet3Idx/I");
+    testTree->Branch("jet3Idx" , &b_jet3Idx , "jet3Idx/I");
 
-    testTree->Branch("jet12pt",&b_jet12pt, "jet12pt/F");
-    testTree->Branch("jet12eta",&b_jet12eta, "jet12eta/F");
-    testTree->Branch("jet12deta",&b_jet12deta, "jet12deta/F");
-    testTree->Branch("jet12phi",&b_jet12phi, "jet12phi/F");
-    testTree->Branch("jet12dphi",&b_jet12dphi, "jet12dphi/F");
-    testTree->Branch("jet12dR", &b_jet12dR, "jet12dR/F");
-    testTree->Branch("jet12m", &b_jet12m, "jet12m/F");
+    testTree->Branch("jet12pt"  , &b_jet12pt  , "jet12pt/F");
+    testTree->Branch("jet12eta" , &b_jet12eta , "jet12eta/F");
+    testTree->Branch("jet12deta", &b_jet12deta, "jet12deta/F");
+    testTree->Branch("jet12phi" , &b_jet12phi , "jet12phi/F");
+    testTree->Branch("jet12dphi", &b_jet12dphi, "jet12dphi/F");
+    testTree->Branch("jet12dR"  , &b_jet12dR  , "jet12dR/F");
+    testTree->Branch("jet12m"   , &b_jet12m   , "jet12m/F");
 
-    testTree->Branch("jet23pt",&b_jet23pt, "jet23pt/F");
-    testTree->Branch("jet23eta",&b_jet23eta, "jet23eta/F");
-    testTree->Branch("jet23deta",&b_jet23deta, "jet23deta/F");
-    testTree->Branch("jet23phi",&b_jet23phi, "jet23phi/F");
-    testTree->Branch("jet23dphi",&b_jet23dphi, "jet23dphi/F");
-    testTree->Branch("jet23dR", &b_jet23dR, "jet23dR/F");
-    testTree->Branch("jet23m", &b_jet23m, "jet23m/F");
+    testTree->Branch("jet23pt"  , &b_jet23pt  , "jet23pt/F");
+    testTree->Branch("jet23eta" , &b_jet23eta , "jet23eta/F");
+    testTree->Branch("jet23deta", &b_jet23deta, "jet23deta/F");
+    testTree->Branch("jet23phi" , &b_jet23phi , "jet23phi/F");
+    testTree->Branch("jet23dphi", &b_jet23dphi, "jet23dphi/F");
+    testTree->Branch("jet23dR"  , &b_jet23dR  , "jet23dR/F");
+    testTree->Branch("jet23m"   , &b_jet23m   , "jet23m/F");
 
-    testTree->Branch("jet31pt",&b_jet31pt, "jet31pt/F");
-    testTree->Branch("jet31eta",&b_jet31eta, "jet31eta/F");
-    testTree->Branch("jet31deta",&b_jet31deta, "jet31deta/F");
-    testTree->Branch("jet31phi",&b_jet31phi, "jet31phi/F");
-    testTree->Branch("jet31dphi",&b_jet31dphi, "jet31dphi/F");
-    testTree->Branch("jet31dR", &b_jet31dR, "jet31dR/F");
-    testTree->Branch("jet31m",&b_jet31m, "jet31m/F");
+    testTree->Branch("jet31pt"  , &b_jet31pt  , "jet31pt/F");
+    testTree->Branch("jet31eta" , &b_jet31eta , "jet31eta/F");
+    testTree->Branch("jet31deta", &b_jet31deta, "jet31deta/F");
+    testTree->Branch("jet31phi" , &b_jet31phi , "jet31phi/F");
+    testTree->Branch("jet31dphi", &b_jet31dphi, "jet31dphi/F");
+    testTree->Branch("jet31dR"  , &b_jet31dR  , "jet31dR/F");
+    testTree->Branch("jet31m"   , &b_jet31m   , "jet31m/F");
 
-    testTree->Branch("lepWpt", &b_lepWpt, "lepWpt/F");
-    testTree->Branch("lepWeta", &b_lepWeta, "lepWeta/F");
-    testTree->Branch("lepWphi", &b_lepWphi, "lepWphi/F");
+    testTree->Branch("lepWpt"  , &b_lepWpt  , "lepWpt/F");
+    testTree->Branch("lepWeta" , &b_lepWeta , "lepWeta/F");
+    testTree->Branch("lepWphi" , &b_lepWphi , "lepWphi/F");
     testTree->Branch("lepWdphi", &b_lepWdphi, "lepWdphi/F");
-    testTree->Branch("lepWm", &b_lepWm, "lepWm/F");
+    testTree->Branch("lepWm"   , &b_lepWm   , "lepWm/F");
 
-    testTree->Branch("lepTpt", &b_lepTpt, "lepTpt/F");
-    testTree->Branch("lepTeta", &b_lepTeta, "lepTeta/F");
+    testTree->Branch("lepTpt"  , &b_lepTpt  , "lepTpt/F");
+    testTree->Branch("lepTeta" , &b_lepTeta , "lepTeta/F");
     testTree->Branch("lepTdeta", &b_lepTdeta, "lepTdeta/F");
-    testTree->Branch("lepTphi", &b_lepTphi, "lepTphi/F");
+    testTree->Branch("lepTphi" , &b_lepTphi , "lepTphi/F");
     testTree->Branch("lepTdphi", &b_lepTdphi, "lepTdphi/F");//W and b
-    testTree->Branch("lepTdR", &b_lepTdR, "lepTdR/F");
-    testTree->Branch("lepTm", &b_lepTm, "lepTm/F");
+    testTree->Branch("lepTdR"  , &b_lepTdR  , "lepTdR/F");
+    testTree->Branch("lepTm"   , &b_lepTm   , "lepTm/F");
 
-    testTree->Branch("hadTpt", &b_hadTpt, "hadTpt/F");
-    testTree->Branch("hadTeta", &b_hadTeta, "hadTeta/F");
+    testTree->Branch("hadTpt"      , &b_hadTpt      , "hadTpt/F");
+    testTree->Branch("hadTeta"     , &b_hadTeta     , "hadTeta/F");
     testTree->Branch("hadT12_3deta", &b_hadT12_3deta, "hadT12_3deta/F");
     testTree->Branch("hadT23_1deta", &b_hadT23_1deta, "hadT23_1deta/F");
     testTree->Branch("hadT31_2deta", &b_hadT31_2deta, "hadT31_2deta/F");
-    testTree->Branch("hadTphi", &b_hadTphi, "hadTphi/F");
+    testTree->Branch("hadTphi"     , &b_hadTphi     , "hadTphi/F");
     testTree->Branch("hadT12_3dphi", &b_hadT12_3dphi, "hadT12_3dphi/F");
     testTree->Branch("hadT23_1dphi", &b_hadT23_1dphi, "hadT23_1dphi/F");
     testTree->Branch("hadT31_2dphi", &b_hadT31_2dphi, "hadT31_2dphi/F");
-    testTree->Branch("hadT12_3dR", &b_hadT12_3dR, "hadT12_3dR/F");
-    testTree->Branch("hadT23_1dR", &b_hadT23_1dR, "hadT23_1dR/F");
-    testTree->Branch("hadT31_2dR", &b_hadT31_2dR, "hadT31_2dR/F");
-    testTree->Branch("hadTm", &b_hadTm, "hadTm/F");
+    testTree->Branch("hadT12_3dR"  , &b_hadT12_3dR  , "hadT12_3dR/F");
+    testTree->Branch("hadT23_1dR"  , &b_hadT23_1dR  , "hadT23_1dR/F");
+    testTree->Branch("hadT31_2dR"  , &b_hadT31_2dR  , "hadT31_2dR/F");
+    testTree->Branch("hadTm"       , &b_hadTm       , "hadTm/F");
 
     fOutput->Add(testTree);
 } 
