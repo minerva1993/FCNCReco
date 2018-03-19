@@ -243,7 +243,6 @@ Bool_t MyAnalysis::Process(Long64_t entry)
   double cjetPt = 0;
 
   //for Goh's Kin fit
-  int b_kin_bjetcode;
   bool match1 = false;
   bool match2 = false;
   double gendR = -1.0;
@@ -262,22 +261,20 @@ Bool_t MyAnalysis::Process(Long64_t entry)
   bool passmuon = (mode == 0) && (lepton.Pt() > 30) && (abs(lepton.Eta()) <= 2.1);
   bool passelectron = (mode == 1) && (lepton.Pt() > 35) && (abs(lepton.Eta()) <= 2.1);
 
-if( option.Contains("DataSingleMu") ){
-  if( !passmuon ) return kTRUE;//RDMu
-  if( passelectron) return kTRUE;//RDMu
-}
-else if( option.Contains("DataSingleEG") ){
-  if( !passelectron ) return kTRUE;//RDelec
-  if( passmuon ) return kTRUE;//RDelec
-}
-else{
-  if( !passmuon && !passelectron ) return kTRUE;
-}
-//if( passmuon || passelectron ){
+  if( option.Contains("DataSingleMu") ){
+    if( !passmuon ) return kTRUE;//RDMu
+    if( passelectron) return kTRUE;//RDMu
+  }
+  else if( option.Contains("DataSingleEG") ){
+    if( !passelectron ) return kTRUE;//RDelec
+    if( passmuon ) return kTRUE;//RDelec
+  }
+  else{
+    if( !passmuon && !passelectron ) return kTRUE;
+  }
+  //if( passmuon || passelectron ){
 
   vector<float> v_cjet_m;
-  vector<TLorentzVector> v_bjet_m;
-  vector<TLorentzVector> v_bjet_t;
   vector<TLorentzVector> v_jet;
   int jetIdx[4];
   TLorentzVector jetP4s[4];
@@ -292,11 +289,9 @@ else{
       njets++;
       if( jet_CSV[iJet] > 0.8484 ){
         nbjets_m++;
-        v_bjet_m.push_back(jet);
       }
       if( jet_CSV[iJet] > 0.9535 ){
         nbjets_t++;
-        v_bjet_t.push_back(jet);
       }
       if( jet_CvsL[iJet] > -0.1 && jet_CvsB[iJet] > 0.08 ){
         ncjets_m++;
