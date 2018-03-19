@@ -54,7 +54,7 @@ for branch in data_tree.GetListOfBranches():
     branches[branchName] = array('f', [-999])
     reader.AddSpectator(branchName, branches[branchName])
 
-reader.BookMVA('BDT', TString('deepReco'+ver+'/weights/TMVAClassification_BDT.weights.xml'))
+reader.BookMVA('BDT', TString('/home/minerva1993/recoFCNC/classifier/cms/training/deepReco'+ver+'/weights/TMVAClassification_BDT.weights.xml'))
 
 totalevt = data_tree.GetEntries()
 #print("this sample contains "+str(totalevt)+" combinations")
