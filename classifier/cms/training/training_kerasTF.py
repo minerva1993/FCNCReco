@@ -22,6 +22,53 @@ from keras.regularizers import l2
 from keras.optimizers import Adam, SGD
 from keras.callbacks import Callback
 
+#######################
+#Plot correlaton matrix
+#######################
+def correlations(data, name, **kwds):
+    """Calculate pairwise correlation between features.
+    
+    Extra arguments are passed on to DataFrame.corr()
+    """
+    # simply call df.corr() to get a table of
+    # correlation values if you do not need
+    # the fancy plotting
+    corrmat = data.corr(**kwds)
+
+    fig, ax1 = plt.subplots(ncols=1, figsize=(6,5))
+    
+    opts = {'cmap': plt.get_cmap("RdBu"),
+            'vmin': -1, 'vmax': +1}
+    heatmap1 = ax1.pcolor(corrmat, **opts)
+    plt.colorbar(heatmap1, ax=ax1)
+
+    ax1.set_title("Correlations")
+
+    labels = corrmat.columns.values
+    for ax in (ax1,):
+        ax.tick_params(labelsize=6)
+        # shift location of ticks to center of the bins
+        ax.set_xticks(np.arange(len(labels))+0.5, minor=False)
+        ax.set_yticks(np.arange(len(labels))+0.5, minor=False)
+        ax.set_xticklabels(labels, minor=False, ha='right', rotation=90)
+        ax.set_yticklabels(labels, minor=False)
+        
+    plt.tight_layout()
+    #plt.show()
+    if name == 'sig':
+      plt.savefig('fig_corr_s.pdf')
+      print('Correlation matrix for signal is saved!')
+      plt.gcf().clear() 
+    elif name == 'bkg':
+      plt.savefig('fig_corr_b.pdf')
+      plt.gcf().clear() 
+      print('Correlation matrix for background is saved!')
+    else: print('Wrong class name!')
+
+
+########################################
+#Compute AUC after training and plot ROC
+########################################
 class roc_callback(Callback):
   def __init__(self, training_data, validation_data):
       self.x = training_data[0]
@@ -34,20 +81,25 @@ class roc_callback(Callback):
       return
 
   def on_train_end(self, logs={}):
-      #compute roc only at the end of training
+      ############
+      #compute AUC
+      ############
+      print('Calculating AUC')
       y_pred = self.model.predict(self.x)
       roc = roc_auc_score(self.y, y_pred)
       y_pred_val = self.model.predict(self.x_val)
       roc_val = roc_auc_score(self.y_val, y_pred_val)
       print('\rroc-auc: %s - roc-auc_val: %s' % (str(round(roc,4)), str(round(roc_val,4))),end=100*' '+'\n')
 
-      #print(self.y_val)
-      #print(y_pred_val)
+      ###############
+      #Plot ROC curve
+      ###############
       fpr = dict()
       tpr = dict()
       roc_auc = dict()
-      #fpr[0], tpr[0], thresholds0 = roc_curve(self.y_val[:,0], y_pred_val[:,0], pos_label=1)
-      fpr[1], tpr[1], thresholds1 = roc_curve(self.y_val[:,1], y_pred_val[:,1], pos_label=1)
+      #fpr[0], tpr[0], thresholds0 = roc_curve(self.y_val[:,0], y_pred_val[:,0], pos_label=1)#w.r.t bkg is truth in val set
+      fpr[1], tpr[1], thresholds1 = roc_curve(self.y_val[:,1], y_pred_val[:,1], pos_label=1)#w.r.t sig is truth in val set
+      fpr[2], tpr[2], thresholds2 = roc_curve(self.y[:,1], y_pred[:,1], pos_label=1)#w.r.t sig is truth in training set, for overtraining check
       #plt.plot(1-fpr[0], 1-(1-tpr[0]), 'b')#same as [1]
       plt.plot(tpr[1], 1-fpr[1], 'r')#HEP style ROC
       #plt.plot([0,1], [0,1], 'r--')
@@ -55,7 +107,42 @@ class roc_callback(Callback):
       plt.xlabel('Signal Efficiency')
       plt.ylabel('Background Rejection')
       plt.title('ROC Curve')
-      plt.show()
+      plt.savefig('fig_roc.pdf')
+
+      ########################################################
+      #Overtraining Check, as well as bkg & sig discrimination
+      ########################################################
+      bins = 40
+      scores = [tpr[1], fpr[1], tpr[2], fpr[2]]
+      low = min(np.min(d) for d in scores)
+      high = max(np.max(d) for d in scores)
+      low_high = (low,high)
+
+      #test is filled
+      plt.hist(tpr[1],
+               color='b', alpha=0.5, range=low_high, bins=bins,
+               histtype='stepfilled', density=True, label='S (test)')
+      plt.hist(fpr[1],
+               color='r', alpha=0.5, range=low_high, bins=bins,
+               histtype='stepfilled', density=True, label='B (test)')
+
+      #training is dotted
+      hist, bins = np.histogram(tpr[2], bins=bins, range=low_high)
+      scale = len(tpr[2]) / sum(hist)
+      err = np.sqrt(hist * scale) / scale
+      width = (bins[1] - bins[0])
+      center = (bins[:-1] + bins[1:]) / 2
+      plt.errorbar(center, hist, yerr=err, fmt='o', c='b', label='S (training)')
+      hist, bins = np.histogram(fpr[2], bins=bins, range=low_high)
+      scale = len(tpr[2]) / sum(hist)
+      err = np.sqrt(hist * scale) / scale
+      plt.errorbar(center, hist, yerr=err, fmt='o', c='r', label='B (training)')
+
+      plt.xlabel("Deep Learning Score")
+      plt.ylabel("Arbitrary units")
+      plt.legend(loc='best')
+      plt.savefig('fig_overtraining.pdf')
+      plt.gcf().clear()
       return
 
   def on_epoch_begin(self, epoch, logs={}):
@@ -84,7 +171,7 @@ class roc_callback(Callback):
 #read input and skim
 ####################
 data = pd.read_hdf('./ntuples/ttbarJetCombinations.h5')
-#print(data.index.is_unique)#check if indices are duplicated
+#print(daaxis=1ta.index.is_unique)#check if indices are duplicated
 data["genMatch"] = (data['genMatch'] == 1111).astype(int)
 data = shuffle(data)
 NumEvt = data['genMatch'].value_counts()
@@ -96,14 +183,14 @@ NumEvt2 = data['genMatch'].value_counts()
 print('bkg/sig events after bkg skim : '+ str(NumEvt2.tolist()))
 
 
-############################
-#drop phi and label features
-############################
+##########################################
+#drop phi and label features, correlations
+##########################################
 #col_names = list(data_train)
 labels = data.filter(['genMatch'], axis=1)
 labels = labels.values
 labels = np_utils.to_categorical(labels)
-data = data.drop(['nevt', 'file', 'GoodPV', 'EventCategory', 'EventWeight', 'genMatch',
+data = data.drop(['nevt', 'file', 'GoodPV', 'EventCategory', 'EventWeight',
                   'njets', 'nbjets_m',
                   'lepton_pt', 'lepton_eta', 'lepton_phi', 'MET', 'MET_phi', 'lepDPhi',
                   'jet0phi', 'jet0csv', 'jet0cvsl', 'jet0cvsb', 'jet0Idx',
@@ -116,6 +203,11 @@ data = data.drop(['nevt', 'file', 'GoodPV', 'EventCategory', 'EventWeight', 'gen
                   ], axis=1)
 data.astype('float32')
 #print list(data_train)
+
+correlations(data.loc[data['genMatch'] == 0].drop('genMatch', axis=1), 'bkg')
+correlations(data.loc[data['genMatch'] == 1].drop('genMatch', axis=1), 'sig')
+data = data.drop('genMatch', axis=1) #then drop label
+
 
 ########################
 #Standardization and PCA
@@ -148,7 +240,7 @@ Y_test = labels[numTest:]
 #################################
 #Keras model compile and training
 #################################
-a = 50
+a = 100
 b = 0.1
 init = 'glorot_uniform'
 
@@ -233,8 +325,9 @@ with tf.device("/cpu:0"):
 parallel_model = multi_gpu_model(model, gpus=4)
 parallel_model.compile(loss='binary_crossentropy', optimizer=Adam(lr=1E-3, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=1E-3), metrics=['binary_accuracy'])
 #parallel_model.summary()
+
 history = parallel_model.fit(X_train, Y_train, 
-                             epochs=100, batch_size=1000, 
+                             epochs=1, batch_size=1000, 
                              validation_data=(X_test, Y_test), 
                              #class_weight={ 0: 14, 1: 1 }, 
                              callbacks=[roc_callback(training_data=(X_train, Y_train), validation_data=(X_test, Y_test))]
@@ -249,13 +342,14 @@ plt.title('model accuracy')
 plt.ylabel('accuracy')
 plt.xlabel('epoch')
 plt.legend(['train', 'test'], loc='lower right')
-plt.show()
+plt.savefig('fig_accuracy.pdf')
+plt.gcf().clear() 
 
 plt.plot(history.history['loss'])
 plt.plot(history.history['val_loss'])
 plt.title('binary crossentropy')
 plt.ylabel('loss')
 plt.xlabel('epoch')
-plt.legend(['train', 'test'], loc='lower right')
-plt.show()
-
+plt.legend(['train', 'test'], loc='upper right')
+plt.savefig('fig_loss.pdf')
+plt.gcf().clear() 
