@@ -11,6 +11,8 @@ from sklearn.decomposition import PCA
 from sklearn.utils import shuffle, class_weight
 from sklearn.metrics import roc_auc_score, roc_curve
 import numpy as np
+from root_numpy import array2tree, tree2array
+from ROOT import TFile, TTree
 
 import tensorflow as tf
 import keras
@@ -76,7 +78,6 @@ class roc_callback(Callback):
       self.x_val = validation_data[0]
       self.y_val = validation_data[1]
 
-
   def on_train_begin(self, logs={}):
       return
 
@@ -108,6 +109,7 @@ class roc_callback(Callback):
       plt.ylabel('Background Rejection')
       plt.title('ROC Curve')
       plt.savefig('fig_roc.pdf')
+      plt.gcf().clear()
 
       ########################################################
       #Overtraining Check, as well as bkg & sig discrimination
@@ -127,13 +129,13 @@ class roc_callback(Callback):
                histtype='stepfilled', density=True, label='B (test)')
 
       #training is dotted
-      hist, bins = np.histogram(tpr[2], bins=bins, range=low_high)
+      hist, bins = np.histogram(tpr[2], bins=bins, range=low_high, density=True)
       scale = len(tpr[2]) / sum(hist)
       err = np.sqrt(hist * scale) / scale
       width = (bins[1] - bins[0])
       center = (bins[:-1] + bins[1:]) / 2
       plt.errorbar(center, hist, yerr=err, fmt='o', c='b', label='S (training)')
-      hist, bins = np.histogram(fpr[2], bins=bins, range=low_high)
+      hist, bins = np.histogram(fpr[2], bins=bins, range=low_high, density=True)
       scale = len(tpr[2]) / sum(hist)
       err = np.sqrt(hist * scale) / scale
       plt.errorbar(center, hist, yerr=err, fmt='o', c='r', label='B (training)')
@@ -237,6 +239,7 @@ Y_test = labels[numTest:]
 #print str(len(X_train)) +' '+ str(len(Y_train)) +' ' + str(len(X_test)) +' '+ str(len(Y_test))
 #print labels
 
+
 #################################
 #Keras model compile and training
 #################################
@@ -327,13 +330,14 @@ parallel_model.compile(loss='binary_crossentropy', optimizer=Adam(lr=1E-3, beta_
 #parallel_model.summary()
 
 history = parallel_model.fit(X_train, Y_train, 
-                             epochs=1, batch_size=1000, 
+                             epochs=10, batch_size=1000, 
                              validation_data=(X_test, Y_test), 
                              #class_weight={ 0: 14, 1: 1 }, 
                              callbacks=[roc_callback(training_data=(X_train, Y_train), validation_data=(X_test, Y_test))]
                              )
 
 model.save('model.h5')#save template model, rather than the model returned by multi_gpu_model.
+
 
 #print(history.history.keys())
 plt.plot(history.history['binary_accuracy'])
@@ -353,3 +357,41 @@ plt.xlabel('epoch')
 plt.legend(['train', 'test'], loc='upper right')
 plt.savefig('fig_loss.pdf')
 plt.gcf().clear() 
+
+ver = '01'
+for filename in os.listdir("/home/minerva1993/deepReco/j4b2_tt"):
+  infile = TFile.Open('/home/minerva1993/deepReco/j4b2_tt/'+filename)
+  print('processig '+filename)
+  intree = infile.Get('test_tree')
+  inarray = tree2array(intree)
+  eval_df = pd.DataFrame(inarray)
+ 
+  eval_df = eval_df.drop(['nevt', 'file', 'GoodPV', 'EventCategory', 'EventWeight', 'genMatch',
+                          'njets', 'nbjets_m',
+                          'lepton_pt', 'lepton_eta', 'lepton_phi', 'MET', 'MET_phi', 'lepDPhi',
+                          'jet0phi', 'jet0csv', 'jet0cvsl', 'jet0cvsb', 'jet0Idx',
+                          'jet1phi', 'jet1csv', 'jet1cvsl', 'jet1cvsb', 'jet1Idx',
+                          'jet2phi', 'jet2csv', 'jet2cvsl', 'jet2cvsb', 'jet2Idx',
+                          'jet3phi', 'jet3csv', 'jet3cvsl', 'jet3cvsb', 'jet3Idx',
+                          'jet12phi', 'jet23phi', 'jet31phi',
+                          'lepWeta', 'lepWphi', 'lepTpt', 'lepTeta', 'lepTdeta', 'lepTphi', 'lepTdR',
+                          'hadTpt', 'hadTphi',
+                          ], axis=1)
+  eval_df.astype('float32')
+
+  eval_scaler = StandardScaler()
+  eval_scaler.fit(eval_df)
+  eval_df_sc = eval_scaler.transform(eval_df)
+  dim = 46
+  eval_pca = PCA(n_components=dim)
+
+  X = eval_pca.fit_transform(eval_df_sc)
+  y = parallel_model.predict(X)
+  y.dtype = [('KerasScore', np.float32)]
+
+  outfile = TFile.Open('scoreTT'+ver+'/score_'+filename,'RECREATE')
+  outtree = TTree("tree","tree")
+  array2tree(y, name='tree', tree=outtree)
+  outtree.Fill()
+  outfile.Write()
+  outfile.Close()

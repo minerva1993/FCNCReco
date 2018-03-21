@@ -1,0 +1,322 @@
+DataSetFactory           : [deepRecoTT01] :  
+                         : 
+Factory                  : Train all methods
+Factory                  : [deepRecoTT01] : Create Transformation "I" with events from all classes.
+                         : 
+                         : Transformation, Variable selection : 
+                         : Input : variable 'jet0pt' <---> Output : variable 'jet0pt'
+                         : Input : variable 'jet0eta' <---> Output : variable 'jet0eta'
+                         : Input : variable 'jet0m' <---> Output : variable 'jet0m'
+                         : Input : variable 'jet1pt' <---> Output : variable 'jet1pt'
+                         : Input : variable 'jet1eta' <---> Output : variable 'jet1eta'
+                         : Input : variable 'jet1m' <---> Output : variable 'jet1m'
+                         : Input : variable 'jet2pt' <---> Output : variable 'jet2pt'
+                         : Input : variable 'jet2eta' <---> Output : variable 'jet2eta'
+                         : Input : variable 'jet2m' <---> Output : variable 'jet2m'
+                         : Input : variable 'jet3pt' <---> Output : variable 'jet3pt'
+                         : Input : variable 'jet3eta' <---> Output : variable 'jet3eta'
+                         : Input : variable 'jet3m' <---> Output : variable 'jet3m'
+                         : Input : variable 'jet12pt' <---> Output : variable 'jet12pt'
+                         : Input : variable 'jet12eta' <---> Output : variable 'jet12eta'
+                         : Input : variable 'jet12deta' <---> Output : variable 'jet12deta'
+                         : Input : variable 'jet12dphi' <---> Output : variable 'jet12dphi'
+                         : Input : variable 'jet12dR' <---> Output : variable 'jet12dR'
+                         : Input : variable 'jet12m' <---> Output : variable 'jet12m'
+                         : Input : variable 'jet23pt' <---> Output : variable 'jet23pt'
+                         : Input : variable 'jet23eta' <---> Output : variable 'jet23eta'
+                         : Input : variable 'jet23deta' <---> Output : variable 'jet23deta'
+                         : Input : variable 'jet23dphi' <---> Output : variable 'jet23dphi'
+                         : Input : variable 'jet23dR' <---> Output : variable 'jet23dR'
+                         : Input : variable 'jet23m' <---> Output : variable 'jet23m'
+                         : Input : variable 'jet31pt' <---> Output : variable 'jet31pt'
+                         : Input : variable 'jet31eta' <---> Output : variable 'jet31eta'
+                         : Input : variable 'jet31deta' <---> Output : variable 'jet31deta'
+                         : Input : variable 'jet31dphi' <---> Output : variable 'jet31dphi'
+                         : Input : variable 'jet31dR' <---> Output : variable 'jet31dR'
+                         : Input : variable 'jet31m' <---> Output : variable 'jet31m'
+                         : Input : variable 'lepWpt' <---> Output : variable 'lepWpt'
+                         : Input : variable 'lepWdphi' <---> Output : variable 'lepWdphi'
+                         : Input : variable 'lepWm' <---> Output : variable 'lepWm'
+                         : Input : variable 'lepTdphi' <---> Output : variable 'lepTdphi'
+                         : Input : variable 'lepTm' <---> Output : variable 'lepTm'
+                         : Input : variable 'hadTeta' <---> Output : variable 'hadTeta'
+                         : Input : variable 'hadT12_3deta' <---> Output : variable 'hadT12_3deta'
+                         : Input : variable 'hadT23_1deta' <---> Output : variable 'hadT23_1deta'
+                         : Input : variable 'hadT31_2deta' <---> Output : variable 'hadT31_2deta'
+                         : Input : variable 'hadT12_3dphi' <---> Output : variable 'hadT12_3dphi'
+                         : Input : variable 'hadT23_1dphi' <---> Output : variable 'hadT23_1dphi'
+                         : Input : variable 'hadT31_2dphi' <---> Output : variable 'hadT31_2dphi'
+                         : Input : variable 'hadT12_3dR' <---> Output : variable 'hadT12_3dR'
+                         : Input : variable 'hadT23_1dR' <---> Output : variable 'hadT23_1dR'
+                         : Input : variable 'hadT31_2dR' <---> Output : variable 'hadT31_2dR'
+                         : Input : variable 'hadTm' <---> Output : variable 'hadTm'
+TFHandler_Factory        :     Variable            Mean            RMS    [        Min            Max ]
+                         : -------------------------------------------------------------------------------
+                         :       jet0pt:        88.508        221.53   [      0.045557    1.5694e+05 ]
+                         :      jet0eta:    -0.0010108        1.0336   [       -2.3999        2.3994 ]
+                         :        jet0m:        12.467        34.701   [     0.0083666        33167. ]
+                         :       jet1pt:        76.957        57.060   [        30.000        1179.8 ]
+                         :      jet1eta:    -0.0067471        1.0836   [       -2.3999        2.3995 ]
+                         :        jet1m:        10.997        6.9114   [       0.61120        183.76 ]
+                         :       jet2pt:        75.629        59.228   [        17.773        1156.1 ]
+                         :      jet2eta:     0.0062316        1.1469   [       -2.3996        2.3997 ]
+                         :        jet2m:        11.171        7.3885   [        1.1601        172.28 ]
+                         :       jet3pt:        84.681        55.219   [       0.33500        1782.8 ]
+                         :      jet3eta:     0.0057771        1.0357   [       -2.3997        2.3998 ]
+                         :        jet3m:        12.078        6.9596   [      0.083246        350.20 ]
+                         :      jet12pt:        116.28        79.117   [       0.47852        1339.5 ]
+                         :     jet12eta:    -0.0021579        1.3679   [       -6.5811        6.3308 ]
+                         :    jet12deta:    -0.0084907        1.2001   [       -5.6928        6.0438 ]
+                         :    jet12dphi:     0.0012829        1.6615   [       -3.1415        3.1414 ]
+                         :      jet12dR:        1.8559       0.90628   [       0.39986        5.5602 ]
+                         :       jet12m:        125.67        110.29   [        15.994        2246.9 ]
+                         :      jet23pt:        113.00        78.071   [      0.045400        1783.0 ]
+                         :     jet23eta:     0.0099034        1.4109   [       -6.8472        9.2408 ]
+                         :    jet23deta:    -0.0019293        1.1276   [       -7.6441        6.4224 ]
+                         :    jet23dphi:     0.0071348        1.8578   [       -3.1415        3.1415 ]
+                         :      jet23dR:        2.0516       0.86403   [       0.40207        5.5497 ]
+                         :       jet23m:        139.70        104.20   [        16.328        1951.9 ]
+                         :      jet31pt:        114.75        78.097   [       0.20254        1706.9 ]
+                         :     jet31eta:    -0.0015856        1.3751   [       -6.9675        7.4127 ]
+                         :    jet31deta:     0.0098309        1.1060   [       -5.9131        6.1304 ]
+                         :    jet31dphi:     0.0034459        1.8421   [       -3.1415        3.1416 ]
+                         :      jet31dR:        2.0161       0.85976   [       0.39609        5.5570 ]
+                         :       jet31m:        137.64        97.781   [        11.982        2628.9 ]
+                         :       lepWpt:        117.39        76.069   [       0.61808        984.34 ]
+                         :     lepWdphi:    -0.0090088        1.5832   [       -3.1415        3.1416 ]
+                         :        lepWm:        93.586        47.794   [       0.49547        578.08 ]
+                         :     lepTdphi:    0.00084645        1.8011   [       -3.1416        3.1415 ]
+                         :        lepTm:        206.69        100.51   [        23.683        33401. ]
+                         :      hadTeta:     0.0017866        1.4928   [       -7.4550        6.5186 ]
+                         : hadT12_3deta:    -0.0057810        1.1631   [       -6.9504        5.4580 ]
+                         : hadT23_1deta:      0.010586        1.2573   [       -6.5516        5.9117 ]
+                         : hadT31_2deta:   -0.00083425        1.2388   [       -5.6743        7.9750 ]
+                         : hadT12_3dphi:      0.010236        1.8842   [       -3.1415        3.1416 ]
+                         : hadT23_1dphi:    -0.0075799        1.7467   [       -3.1416        3.1416 ]
+                         : hadT31_2dphi:     -0.014919        1.7546   [       -3.1416        3.1414 ]
+                         :   hadT12_3dR:        2.1303       0.91131   [     0.0010726        7.3584 ]
+                         :   hadT23_1dR:        1.9708        1.0137   [     0.0045348        8.6527 ]
+                         :   hadT31_2dR:        1.9787        1.0146   [     0.0046228        9.5982 ]
+                         :        hadTm:        246.48        159.82   [        39.183        2671.8 ]
+                         : -------------------------------------------------------------------------------
+                         : 
+                         : <PlotVariables> Will not produce scatter plots ==> 
+                         : |  The number of 46 input variables and 0 target values would require 1035 two-dimensional
+                         : |  histograms, which would occupy the computer's memory. Note that this
+                         : |  suppression does not have any consequences for your analysis, other
+                         : |  than not disposing of these scatter plots. You can modify the maximum
+                         : |  number of input variables allowed to generate scatter plots in your
+                         : |  script via the command line:
+                         : |  "(TMVA::gConfig().GetVariablePlotting()).fMaxNumOfAllowedVariablesForScatterPlots = <some int>;"
+                         : 
+                         : Some more output
+                         : Ranking input variables (method unspecific)...
+IdTransformation         : Ranking result (top variable is best ranked)
+                         : -------------------------------------
+                         : Rank : Variable     : Separation
+                         : -------------------------------------
+                         :    1 : hadTm        : 4.342e-01
+                         :    2 : jet12m       : 3.421e-01
+                         :    3 : jet23m       : 2.148e-01
+                         :    4 : jet31m       : 2.051e-01
+                         :    5 : jet12dR      : 1.851e-01
+                         :    6 : hadT31_2dR   : 1.768e-01
+                         :    7 : hadT23_1dR   : 1.767e-01
+                         :    8 : hadT12_3dR   : 1.207e-01
+                         :    9 : hadT23_1dphi : 9.047e-02
+                         :   10 : hadT31_2dphi : 9.029e-02
+                         :   11 : jet23dR      : 8.827e-02
+                         :   12 : jet31dR      : 8.564e-02
+                         :   13 : lepTm        : 7.813e-02
+                         :   14 : jet12dphi    : 7.587e-02
+                         :   15 : hadT12_3dphi : 4.143e-02
+                         :   16 : jet12deta    : 3.289e-02
+                         :   17 : lepTdphi     : 3.023e-02
+                         :   18 : hadT12_3deta : 2.690e-02
+                         :   19 : jet2m        : 2.296e-02
+                         :   20 : jet23dphi    : 2.287e-02
+                         :   21 : jet31dphi    : 2.279e-02
+                         :   22 : jet23deta    : 2.141e-02
+                         :   23 : jet1m        : 1.982e-02
+                         :   24 : jet31deta    : 1.768e-02
+                         :   25 : jet2pt       : 1.653e-02
+                         :   26 : jet2eta      : 1.637e-02
+                         :   27 : jet1pt       : 1.467e-02
+                         :   28 : jet12eta     : 1.438e-02
+                         :   29 : hadT31_2deta : 1.366e-02
+                         :   30 : jet3pt       : 1.365e-02
+                         :   31 : hadT23_1deta : 1.311e-02
+                         :   32 : jet0m        : 1.308e-02
+                         :   33 : jet3m        : 1.262e-02
+                         :   34 : hadTeta      : 1.216e-02
+                         :   35 : jet1eta      : 1.203e-02
+                         :   36 : jet12pt      : 1.148e-02
+                         :   37 : jet0pt       : 8.843e-03
+                         :   38 : lepWpt       : 6.145e-03
+                         :   39 : jet31pt      : 4.742e-03
+                         :   40 : jet23pt      : 3.792e-03
+                         :   41 : jet23eta     : 2.946e-03
+                         :   42 : lepWdphi     : 1.952e-03
+                         :   43 : jet31eta     : 1.907e-03
+                         :   44 : lepWm        : 1.850e-03
+                         :   45 : jet0eta      : 1.501e-03
+                         :   46 : jet3eta      : 1.271e-03
+                         : -------------------------------------
+Factory                  : Train method: BDT for Classification
+                         : 
+BDT                      : #events: (reweighted) sig: 50000 bkg: 50000
+                         : #events: (unweighted) sig: 50000 bkg: 50000
+                         : Training 800 Decision Trees ... patience please
+                         : Elapsed time for training with 100000 events: 391 sec         
+BDT                      : [deepRecoTT01] : Evaluation of BDT on training sample (100000 events)
+                         : Elapsed time for evaluation of 100000 events: 14.5 sec       
+                         : Creating xml weight file: deepRecoTT01/weights/TMVAClassification_BDT.weights.xml
+                         : Creating standalone class: deepRecoTT01/weights/TMVAClassification_BDT.class.C
+Factory                  : Training finished
+                         : 
+                         : Ranking input variables (method specific)...
+BDT                      : Ranking result (top variable is best ranked)
+                         : ----------------------------------------------
+                         : Rank : Variable     : Variable Importance
+                         : ----------------------------------------------
+                         :    1 : lepTdphi     : 3.353e-02
+                         :    2 : jet12m       : 3.278e-02
+                         :    3 : hadTm        : 3.016e-02
+                         :    4 : lepTm        : 2.924e-02
+                         :    5 : jet12dR      : 2.785e-02
+                         :    6 : lepWdphi     : 2.747e-02
+                         :    7 : jet0eta      : 2.744e-02
+                         :    8 : lepWm        : 2.683e-02
+                         :    9 : hadT12_3dR   : 2.565e-02
+                         :   10 : lepWpt       : 2.513e-02
+                         :   11 : jet23m       : 2.419e-02
+                         :   12 : jet12deta    : 2.359e-02
+                         :   13 : jet0pt       : 2.345e-02
+                         :   14 : jet23dR      : 2.335e-02
+                         :   15 : jet2m        : 2.239e-02
+                         :   16 : jet3eta      : 2.199e-02
+                         :   17 : jet31dR      : 2.198e-02
+                         :   18 : jet31m       : 2.187e-02
+                         :   19 : jet2eta      : 2.174e-02
+                         :   20 : hadT23_1deta : 2.117e-02
+                         :   21 : hadT23_1dR   : 2.109e-02
+                         :   22 : hadT23_1dphi : 2.107e-02
+                         :   23 : jet3pt       : 2.087e-02
+                         :   24 : jet31dphi    : 2.075e-02
+                         :   25 : jet1m        : 2.054e-02
+                         :   26 : jet23dphi    : 2.011e-02
+                         :   27 : hadT12_3dphi : 2.010e-02
+                         :   28 : jet12dphi    : 1.991e-02
+                         :   29 : hadT31_2dR   : 1.986e-02
+                         :   30 : hadT31_2dphi : 1.986e-02
+                         :   31 : jet2pt       : 1.983e-02
+                         :   32 : jet1eta      : 1.973e-02
+                         :   33 : jet12pt      : 1.935e-02
+                         :   34 : jet23pt      : 1.935e-02
+                         :   35 : jet23deta    : 1.918e-02
+                         :   36 : jet31pt      : 1.902e-02
+                         :   37 : jet12eta     : 1.848e-02
+                         :   38 : jet1pt       : 1.762e-02
+                         :   39 : jet3m        : 1.751e-02
+                         :   40 : jet31deta    : 1.733e-02
+                         :   41 : hadT31_2deta : 1.725e-02
+                         :   42 : hadT12_3deta : 1.707e-02
+                         :   43 : jet23eta     : 1.704e-02
+                         :   44 : jet31eta     : 1.687e-02
+                         :   45 : hadTeta      : 1.642e-02
+                         :   46 : jet0m        : 1.198e-02
+                         : ----------------------------------------------
+Factory                  : === Destroy and recreate all methods via weight files for testing ===
+                         : 
+Factory                  : Test all methods
+Factory                  : Test method: BDT for Classification performance
+                         : 
+BDT                      : [deepRecoTT01] : Evaluation of BDT on testing sample (40000 events)
+                         : Elapsed time for evaluation of 40000 events: 4.79 sec       
+Factory                  : Evaluate all methods
+Factory                  : Evaluate classifier: BDT
+                         : 
+BDT                      : [deepRecoTT01] : Loop over test events and fill histograms with classifier response...
+                         : 
+TFHandler_BDT            :     Variable            Mean            RMS    [        Min            Max ]
+                         : -------------------------------------------------------------------------------
+                         :       jet0pt:        88.325        124.98   [       0.53292    1.2241e+05 ]
+                         :      jet0eta:     0.0021389        1.0329   [       -2.3990        2.3992 ]
+                         :        jet0m:        12.470        16.369   [      0.094936        15012. ]
+                         :       jet1pt:        76.971        57.512   [        30.000        958.49 ]
+                         :      jet1eta:    -0.0028919        1.0842   [       -2.3998        2.3999 ]
+                         :        jet1m:        10.984        6.7656   [       0.38580        162.92 ]
+                         :       jet2pt:        75.889        60.320   [        20.561        1580.0 ]
+                         :      jet2eta:      0.014281        1.1473   [       -2.3999        2.3994 ]
+                         :        jet2m:        11.240        7.5136   [        1.6023        160.81 ]
+                         :       jet3pt:        84.990        84.491   [        5.7565        9028.5 ]
+                         :      jet3eta:     0.0087164        1.0324   [       -2.3996        2.3994 ]
+                         :        jet3m:        12.151        10.816   [       0.73823        1171.6 ]
+                         :      jet12pt:        115.81        80.030   [       0.63885        1500.0 ]
+                         :     jet12eta:     0.0045839        1.3724   [       -5.2928        5.8192 ]
+                         :    jet12deta:     -0.010110        1.1988   [       -7.2851        6.4626 ]
+                         :    jet12dphi:    -0.0071472        1.6773   [       -3.1413        3.1416 ]
+                         :      jet12dR:        1.8764       0.91670   [       0.39902        5.5113 ]
+                         :       jet12m:        127.68        114.10   [        15.256        2247.4 ]
+                         :      jet23pt:        113.45        99.457   [       0.53134        8927.6 ]
+                         :     jet23eta:      0.013351        1.4099   [       -5.8940        6.1896 ]
+                         :    jet23deta:   -0.00092430        1.1409   [       -6.7324        5.6139 ]
+                         :    jet23dphi:     0.0030864        1.8491   [       -3.1414        3.1415 ]
+                         :      jet23dR:        2.0481       0.85894   [       0.40168        5.5128 ]
+                         :       jet23m:        140.37        108.06   [        17.609        2570.0 ]
+                         :      jet31pt:        115.03        100.55   [       0.20122        9041.4 ]
+                         :     jet31eta:     0.0023242        1.3746   [       -5.7963        6.7401 ]
+                         :    jet31deta:      0.012912        1.1049   [       -5.5974        5.1309 ]
+                         :    jet31dphi:    -0.0026531        1.8387   [       -3.1413        3.1416 ]
+                         :      jet31dR:        2.0141       0.85673   [       0.39999        5.2933 ]
+                         :       jet31m:        137.64        100.26   [        13.524        2392.7 ]
+                         :       lepWpt:        116.41        75.429   [       0.74911        774.68 ]
+                         :     lepWdphi:    -0.0070937        1.5908   [       -3.1408        3.1412 ]
+                         :        lepWm:        93.256        47.444   [       0.49655        568.07 ]
+                         :     lepTdphi:   -0.00083898        1.8016   [       -3.1416        3.1412 ]
+                         :        lepTm:        207.03        99.826   [        16.938        25059. ]
+                         :      hadTeta:     0.0090409        1.4884   [       -5.9414        5.9906 ]
+                         : hadT12_3deta:    -0.0051192        1.1678   [       -5.9041        5.2400 ]
+                         : hadT23_1deta:      0.015581        1.2552   [       -6.0070        5.9606 ]
+                         : hadT31_2deta:     0.0025900        1.2443   [       -5.1065        5.9059 ]
+                         : hadT12_3dphi:      0.010542        1.8823   [       -3.1415        3.1416 ]
+                         : hadT23_1dphi:      0.020379        1.7550   [       -3.1408        3.1416 ]
+                         : hadT31_2dphi:     -0.019197        1.7580   [       -3.1411        3.1416 ]
+                         :   hadT12_3dR:        2.1311       0.91040   [      0.031869        7.1733 ]
+                         :   hadT23_1dR:        1.9844        1.0147   [     0.0071887        7.3167 ]
+                         :   hadT31_2dR:        1.9916        1.0188   [      0.015144        7.9662 ]
+                         :        hadTm:        248.27        165.67   [        46.785        3131.9 ]
+                         : -------------------------------------------------------------------------------
+                         : 
+                         : <PlotVariables> Will not produce scatter plots ==> 
+                         : |  The number of 46 input variables and 0 target values would require 1035 two-dimensional
+                         : |  histograms, which would occupy the computer's memory. Note that this
+                         : |  suppression does not have any consequences for your analysis, other
+                         : |  than not disposing of these scatter plots. You can modify the maximum
+                         : |  number of input variables allowed to generate scatter plots in your
+                         : |  script via the command line:
+                         : |  "(TMVA::gConfig().GetVariablePlotting()).fMaxNumOfAllowedVariablesForScatterPlots = <some int>;"
+                         : 
+                         : Some more output
+                         : 
+                         : Evaluation results ranked by best signal efficiency and purity (area)
+                         : -------------------------------------------------------------------------------------------------------------------
+                         : DataSet       MVA                       
+                         : Name:         Method:          ROC-integ
+                         : deepRecoTT01  BDT            : 0.942
+                         : -------------------------------------------------------------------------------------------------------------------
+                         : 
+                         : Testing efficiency compared to training efficiency (overtraining check)
+                         : -------------------------------------------------------------------------------------------------------------------
+                         : DataSet              MVA              Signal efficiency: from test sample (from training sample) 
+                         : Name:                Method:          @B=0.01             @B=0.10            @B=0.30   
+                         : -------------------------------------------------------------------------------------------------------------------
+                         : deepRecoTT01         BDT            : 0.317 (0.455)       0.832 (0.866)      0.969 (0.971)
+                         : -------------------------------------------------------------------------------------------------------------------
+                         : 
+Dataset:deepRecoTT01     : Created tree 'TestTree' with 40000 events
+                         : 
+Dataset:deepRecoTT01     : Created tree 'TrainTree' with 100000 events
+                         : 
+Factory                  : Thank you for using TMVA!
+                         : For citation information, please visit: http://tmva.sf.net/citeTMVA.html

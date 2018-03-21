@@ -20,7 +20,8 @@ data = TFile.Open('/home/minerva1993/recoFCNC/classifier/cms/mkNtuple/j4b2/'+fil
 data_tree = data.Get('test_tree')
 
 #target = TFile.Open('root://cms-xrdr.sdfarm.kr:1094//xrd/store/user/minerva1993/reco/score'+ver+'/score_'+filename,'RECREATE')
-target = TFile.Open('/home/minerva1993/recoFCNC/classifier/cms/score'+ver+'/score_'+filename,'RECREATE')
+target = TFile.Open('/home/minerva1993/recoFCNC/classifier/cms/scoreFCNC'+ver+'/score_'+filename,'RECREATE')
+#target = TFile.Open('/home/minerva1993/recoFCNC/classifier/cms/scoreTT'+ver+'/score_'+filename,'RECREATE')
 tree = TTree("tree","tree")
 
 branches = {}
