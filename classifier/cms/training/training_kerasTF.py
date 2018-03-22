@@ -229,8 +229,8 @@ X = pca.fit_transform(data_sc)
 #split datasets
 ###############
 totcombi = len(data)
-numTrain = int(round(totcombi*0.5))
-numTest = int(round(totcombi*0.95))#the last 5 percent of data
+numTrain = int(round(totcombi*0.05))
+numTest = int(round(totcombi*0.01))#the last 5 percent of data
 X_train = data_sc[:numTrain]
 X_test = data_sc[numTest:]
 Y_train = labels[:numTrain]
@@ -328,14 +328,12 @@ with tf.device("/cpu:0"):
 parallel_model = multi_gpu_model(model, gpus=4)
 parallel_model.compile(loss='binary_crossentropy', optimizer=Adam(lr=1E-3, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=1E-3), metrics=['binary_accuracy'])
 #parallel_model.summary()
-
 history = parallel_model.fit(X_train, Y_train, 
-                             epochs=10, batch_size=1000, 
+                             epochs=1, batch_size=1000, 
                              validation_data=(X_test, Y_test), 
                              #class_weight={ 0: 14, 1: 1 }, 
                              callbacks=[roc_callback(training_data=(X_train, Y_train), validation_data=(X_test, Y_test))]
                              )
-
 model.save('model.h5')#save template model, rather than the model returned by multi_gpu_model.
 
 
@@ -365,7 +363,12 @@ for filename in os.listdir("/home/minerva1993/deepReco/j4b2_tt"):
   intree = infile.Get('test_tree')
   inarray = tree2array(intree)
   eval_df = pd.DataFrame(inarray)
- 
+  print(eval_df.shape) 
+
+  outfile = TFile.Open('scoreTT'+ver+'/score_'+filename,'RECREATE')
+  outtree = TTree("tree","tree")
+
+  spectator = eval_df.filter(['nevt', 'file', 'EventCategory', 'genMatch', 'jet0Idx', 'jet1Idx', 'jet2Idx', 'jet3Idx', 'lepton_pt', 'MET', 'jet12m', 'lepTm', 'hadTm'], axis=1)
   eval_df = eval_df.drop(['nevt', 'file', 'GoodPV', 'EventCategory', 'EventWeight', 'genMatch',
                           'njets', 'nbjets_m',
                           'lepton_pt', 'lepton_eta', 'lepton_phi', 'MET', 'MET_phi', 'lepDPhi',
@@ -384,14 +387,28 @@ for filename in os.listdir("/home/minerva1993/deepReco/j4b2_tt"):
   eval_df_sc = eval_scaler.transform(eval_df)
   dim = 46
   eval_pca = PCA(n_components=dim)
-
   X = eval_pca.fit_transform(eval_df_sc)
   y = parallel_model.predict(X)
   y.dtype = [('KerasScore', np.float32)]
-
-  outfile = TFile.Open('scoreTT'+ver+'/score_'+filename,'RECREATE')
-  outtree = TTree("tree","tree")
+  y = y[:,1]
   array2tree(y, name='tree', tree=outtree)
+   
+  for colname, value in spectator.iteritems():
+    spect = spectator[colname].values
+    if colname == 'lepton_pt': branchname = 'lepPt'
+    elif colname == 'MET'    : branchname = 'missinget'
+    elif colname == 'jet12m' : branchname = 'whMass'
+    elif colname == 'lepTm'  : branchname = 'leptMass'
+    elif colname == 'hadTm'  : branchname = 'hadTm'
+    else: branchname = colname
+
+    if branchname in ['nevt', 'file', 'EventCategory', 'genMatch', 'jet0Idx', 'jet1Idx', 'jet2Idx', 'jet3Idx' ]: spect.dtype = [(branchname, np.int32)]
+    else:
+      spect.dtype = [(branchname, np.float32)]
+    #print(branchname)
+    #print(spect.shape)
+    array2tree(spect, name='tree', tree=outtree)
+
   outtree.Fill()
   outfile.Write()
   outfile.Close()
