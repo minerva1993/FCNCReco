@@ -10,6 +10,7 @@ from sklearn.preprocessing import StandardScaler, label_binarize
 from sklearn.decomposition import PCA
 from sklearn.utils import shuffle, class_weight
 from sklearn.metrics import roc_auc_score, roc_curve
+from sklearn.metrics import confusion_matrix, f1_score, precision_score, recall_score
 import numpy as np
 from root_numpy import array2tree, tree2array
 from ROOT import TFile, TTree
@@ -17,12 +18,25 @@ from ROOT import TFile, TTree
 import tensorflow as tf
 import keras
 from keras.utils import np_utils, multi_gpu_model
-from keras.models import Model, Sequential
+from keras.models import Model, Sequential, load_model
 from keras.layers import Input, Dense, Activation, Dropout, add
 from keras.layers.normalization import BatchNormalization
 from keras.regularizers import l2
 from keras.optimizers import Adam, SGD
-from keras.callbacks import Callback
+from keras.callbacks import Callback, ModelCheckpoint
+
+ver = '04'
+configDir = '/home/minerva1993/deepReco/'
+
+if not os.path.exists(configDir+'recoTT'+ver):
+  os.makedirs(configDir+'recoTT'+ver)
+if not os.path.exists(configDir+'scoreTT'+ver):
+  os.makedirs(configDir+'scoreTT'+ver)
+test = os.listdir(configDir+'recoTT'+ver)
+for item in test:
+  if item.endswith(".pdf") or item.endswith(".h5") or item.endswith("log"):
+    os.remove(os.path.join(configDir+'recoTT'+ver, item))
+
 
 #######################
 #Plot correlaton matrix
@@ -58,39 +72,81 @@ def correlations(data, name, **kwds):
     plt.tight_layout()
     #plt.show()
     if name == 'sig':
-      plt.savefig('fig_corr_s.pdf')
+      plt.savefig(configDir+'recoTT'+ver+'/fig_corr_s.pdf')
       print('Correlation matrix for signal is saved!')
       plt.gcf().clear() 
     elif name == 'bkg':
-      plt.savefig('fig_corr_b.pdf')
+      plt.savefig(configDir+'recoTT'+ver+'/fig_corr_b.pdf')
       plt.gcf().clear() 
       print('Correlation matrix for background is saved!')
     else: print('Wrong class name!')
+
+
+#####################
+#Plot input variables
+#####################
+def inputvars(sigdata, bkgdata, signame, bkgname, **kwds):
+    print('Plotting input variables')
+    bins = 40
+    for colname in sigdata:
+      dataset = [sigdata, bkgdata]
+      low = min(np.min(d[colname].values) for d in dataset)
+      high = max(np.max(d[colname].values) for d in dataset)
+      if high > 500: low_high = (low,500)
+      else: low_high = (low,high)
+
+      plt.figure()
+      sigdata[colname].plot.hist(color='b', density=True, range=low_high, bins=bins, histtype='step', label='signal')
+      bkgdata[colname].plot.hist(color='r', density=True, range=low_high, bins=bins, histtype='step', label='background')
+      plt.xlabel(colname)
+      plt.ylabel('A.U.')
+      plt.title('Intput variables')
+      plt.legend(loc='upper right')
+      plt.savefig(configDir+'recoTT'+ver+'/fig_'+colname+'.pdf')
+      plt.gcf().clear()
+      plt.close()
 
 
 ########################################
 #Compute AUC after training and plot ROC
 ########################################
 class roc_callback(Callback):
-  def __init__(self, training_data, validation_data):
+  def __init__(self, training_data, validation_data, model):
       self.x = training_data[0]
       self.y = training_data[1]
       self.x_val = validation_data[0]
       self.y_val = validation_data[1]
+      self.model_to_save = model
 
   def on_train_begin(self, logs={}):
       return
 
   def on_train_end(self, logs={}):
+      return
+
+  def on_epoch_begin(self, epoch, logs={}):
+      return
+
+  def on_epoch_end(self, epoch, logs={}):
       ############
       #compute AUC
       ############
-      print('Calculating AUC')
-      y_pred = self.model.predict(self.x)
+      print('Calculating AUC of epoch '+str(epoch+1))
+      y_pred = self.model.predict(self.x, batch_size=2000)
       roc = roc_auc_score(self.y, y_pred)
-      y_pred_val = self.model.predict(self.x_val)
+      y_pred_val = self.model.predict(self.x_val, batch_size=2000)
       roc_val = roc_auc_score(self.y_val, y_pred_val)
       print('\rroc-auc: %s - roc-auc_val: %s' % (str(round(roc,4)), str(round(roc_val,4))),end=100*' '+'\n')
+
+      ###################
+      #Calculate f1 score
+      ###################
+      val_predict = (y_pred_val[:,1]).round()
+      val_targ = self.y_val[:,1]
+      val_f1 = f1_score(val_targ, val_predict)
+      val_recall = recall_score(val_targ, val_predict)
+      val_precision = precision_score(val_targ, val_predict)
+      print('val_f1: %.4f, val_precision: %.4f, val_recall %.4f' %(val_f1, val_precision, val_recall))
 
       ###############
       #Plot ROC curve
@@ -108,7 +164,8 @@ class roc_callback(Callback):
       plt.xlabel('Signal Efficiency')
       plt.ylabel('Background Rejection')
       plt.title('ROC Curve')
-      plt.savefig('fig_roc.pdf')
+      roc_path = configDir+'recoTT'+ver+'/fig_roc_%d_%.4f.pdf' %(epoch+1,round(roc_val,4))
+      plt.savefig(roc_path)
       plt.gcf().clear()
 
       ########################################################
@@ -143,24 +200,20 @@ class roc_callback(Callback):
       plt.xlabel("Deep Learning Score")
       plt.ylabel("Arbitrary units")
       plt.legend(loc='best')
-      plt.savefig('fig_overtraining.pdf')
+      overtrain_path = configDir+'recoTT'+ver+'/fig_overtraining_%d_%.4f.pdf' %(epoch+1,round(roc_val,4))
+      plt.savefig(overtrain_path)
       plt.gcf().clear()
-      return
+      print('ROC curve and overtraining check plots are saved!')
 
-  def on_epoch_begin(self, epoch, logs={}):
-      return
+      del y_pred, y_pred_val, fpr, tpr, roc_auc
 
-  """
-  def on_epoch_end(self, epoch, logs={}):
-      y_pred = self.model.predict(self.x)
-      roc = roc_auc_score(self.y, y_pred)
-      y_pred_val = self.model.predict(self.x_val)
-      roc_val = roc_auc_score(self.y_val, y_pred_val)
-      print('\rroc-auc: %s - roc-auc_val: %s' % (str(round(roc,4)), str(round(roc_val,4))),end=100*' '+'\n')
-      return
-  """
+      ###############################
+      #Save single gpu model manually
+      ###############################
+      modelfile = 'model_%d_%.4f.h5' %(epoch+1,round(roc_val,4))
+      self.model_to_save.save(configDir+'recoTT'+ver+'/'+modelfile)
+      print('Current model is saved')
 
-  def on_epoch_end(self, epoch, logs={}):
       return
 
   def on_batch_begin(self, batch, logs={}):
@@ -169,17 +222,18 @@ class roc_callback(Callback):
   def on_batch_end(self, batch, logs={}):
       return
 
+
 ####################
 #read input and skim
 ####################
 data = pd.read_hdf('./ntuples/ttbarJetCombinations.h5')
-#print(daaxis=1ta.index.is_unique)#check if indices are duplicated
+#print(daaxis=data.index.is_unique)#check if indices are duplicated
 data["genMatch"] = (data['genMatch'] == 1111).astype(int)
 data = shuffle(data)
 NumEvt = data['genMatch'].value_counts()
 #print(NumEvt)
 print('bkg/sig events : '+ str(NumEvt.tolist()))
-data = data.drop(data.query('genMatch < 1').sample(frac=.9, axis=0).index)
+data = data.drop(data.query('genMatch < 1').sample(frac=.91, axis=0).index)
 NumEvt2 = data['genMatch'].value_counts()
 #print(NumEvt2)
 print('bkg/sig events after bkg skim : '+ str(NumEvt2.tolist()))
@@ -190,8 +244,6 @@ print('bkg/sig events after bkg skim : '+ str(NumEvt2.tolist()))
 ##########################################
 #col_names = list(data_train)
 labels = data.filter(['genMatch'], axis=1)
-labels = labels.values
-labels = np_utils.to_categorical(labels)
 data = data.drop(['nevt', 'file', 'GoodPV', 'EventCategory', 'EventWeight',
                   'njets', 'nbjets_m',
                   'lepton_pt', 'lepton_eta', 'lepton_phi', 'MET', 'MET_phi', 'lepDPhi',
@@ -208,43 +260,59 @@ data.astype('float32')
 
 correlations(data.loc[data['genMatch'] == 0].drop('genMatch', axis=1), 'bkg')
 correlations(data.loc[data['genMatch'] == 1].drop('genMatch', axis=1), 'sig')
+
+inputvars(data.loc[data['genMatch'] == 1].drop('genMatch', axis=1), data.loc[data['genMatch'] == 0].drop('genMatch', axis=1), 'sig', 'bkg')
+
 data = data.drop('genMatch', axis=1) #then drop label
+
+
+###############
+#split datasets
+###############
+train_sig = labels.loc[labels['genMatch'] == 1].sample(frac=0.8,random_state=200)
+train_bkg = labels.loc[labels['genMatch'] == 0].sample(frac=0.8,random_state=200)
+test_sig = labels.loc[labels['genMatch'] == 1].drop(train_sig.index)
+test_bkg = labels.loc[labels['genMatch'] == 0].drop(train_bkg.index)
+
+train_idx = pd.concat([train_sig, train_bkg]).index
+test_idx = pd.concat([test_sig, test_bkg]).index
+
+data_train = data.loc[train_idx,:].copy()
+data_test = data.loc[test_idx,:].copy()
+labels_train = labels.loc[train_idx,:].copy()
+labels_test = labels.loc[test_idx,:].copy()
+
+print('Training signal: '+str(len(train_sig))+' / testing signal: '+str(len(test_sig))+' / training background: '+str(len(train_bkg))+' / testing background: '+str(len(test_bkg)))
+#print(str(len(X_train)) +' '+ str(len(Y_train)) +' ' + str(len(X_test)) +' '+ str(len(Y_test)))
+#print(labels)
+
+labels_train = labels_train.values
+Y_train = np_utils.to_categorical(labels_train)
+labels_test = labels_test.values
+Y_test = np_utils.to_categorical(labels_test)
 
 
 ########################
 #Standardization and PCA
 ########################
 scaler = StandardScaler()
-scaler.fit(data)
-data_sc = scaler.transform(data)
-
+data_train_sc = scaler.fit_transform(data_train)
+data_test_sc = scaler.fit_transform(data_test)
+"""
 NCOMPONENTS = 46
-pca = PCA(n_components=NCOMPONENTS)
-X = pca.fit_transform(data_sc)
-#pca_std = np.std(data_pca)
-#print(data_pca_train.shape)
-
-
-###############
-#split datasets
-###############
-totcombi = len(data)
-numTrain = int(round(totcombi*0.05))
-numTest = int(round(totcombi*0.01))#the last 5 percent of data
-X_train = data_sc[:numTrain]
-X_test = data_sc[numTest:]
-Y_train = labels[:numTrain]
-Y_test = labels[numTest:]
-#print str(totcombi)
-#print str(len(X_train)) +' '+ str(len(Y_train)) +' ' + str(len(X_test)) +' '+ str(len(Y_test))
-#print labels
+pca = PCA(n_components=NCOMPONENTS, svd_solver='auto')
+X_train = pca.fit_transform(data_train_sc)
+X_test = pca.fit_transform(data_test_sc)
+"""
+X_train = data_train_sc
+X_test = data_test_sc
 
 
 #################################
 #Keras model compile and training
 #################################
-a = 100
-b = 0.1
+a = 400
+b = 0.3
 init = 'glorot_uniform'
 
 with tf.device("/cpu:0"):
@@ -317,7 +385,7 @@ with tf.device("/cpu:0"):
   x = Dropout(b)(x)
 
   x = add([x, branch_point6])
-  
+
   x = BatchNormalization()(x)
   x = Dense(a, activation='relu', kernel_initializer=init, bias_initializer='zeros')(x)
   x = Dropout(b)(x)
@@ -328,13 +396,16 @@ with tf.device("/cpu:0"):
 parallel_model = multi_gpu_model(model, gpus=4)
 parallel_model.compile(loss='binary_crossentropy', optimizer=Adam(lr=1E-3, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=1E-3), metrics=['binary_accuracy'])
 #parallel_model.summary()
+
+modelfile = 'model_{epoch:02d}_{val_binary_accuracy:.4f}.h5'
+checkpoint = ModelCheckpoint(configDir+'recoTT'+ver+'/'+modelfile, monitor='val_binary_accuracy', verbose=1, save_best_only=False)#, mode='max')
 history = parallel_model.fit(X_train, Y_train, 
-                             epochs=1, batch_size=1000, 
+                             epochs=50, batch_size=4000, 
                              validation_data=(X_test, Y_test), 
                              #class_weight={ 0: 14, 1: 1 }, 
-                             callbacks=[roc_callback(training_data=(X_train, Y_train), validation_data=(X_test, Y_test))]
+                             callbacks=[roc_callback(training_data=(X_train, Y_train), validation_data=(X_test, Y_test), model=model)]
                              )
-model.save('model.h5')#save template model, rather than the model returned by multi_gpu_model.
+model.save(configDir+'recoTT'+ver+'/model.h5')#save template model, rather than the model returned by multi_gpu_model.
 
 
 #print(history.history.keys())
@@ -344,7 +415,7 @@ plt.title('model accuracy')
 plt.ylabel('accuracy')
 plt.xlabel('epoch')
 plt.legend(['train', 'test'], loc='lower right')
-plt.savefig('fig_accuracy.pdf')
+plt.savefig(configDir+'recoTT'+ver+'/fig_accuracy.pdf')
 plt.gcf().clear() 
 
 plt.plot(history.history['loss'])
@@ -353,62 +424,5 @@ plt.title('binary crossentropy')
 plt.ylabel('loss')
 plt.xlabel('epoch')
 plt.legend(['train', 'test'], loc='upper right')
-plt.savefig('fig_loss.pdf')
+plt.savefig(configDir+'recoTT'+ver+'/fig_loss.pdf')
 plt.gcf().clear() 
-
-ver = '01'
-for filename in os.listdir("/home/minerva1993/deepReco/j4b2_tt"):
-  infile = TFile.Open('/home/minerva1993/deepReco/j4b2_tt/'+filename)
-  print('processig '+filename)
-  intree = infile.Get('test_tree')
-  inarray = tree2array(intree)
-  eval_df = pd.DataFrame(inarray)
-  print(eval_df.shape) 
-
-  outfile = TFile.Open('scoreTT'+ver+'/score_'+filename,'RECREATE')
-  outtree = TTree("tree","tree")
-
-  spectator = eval_df.filter(['nevt', 'file', 'EventCategory', 'genMatch', 'jet0Idx', 'jet1Idx', 'jet2Idx', 'jet3Idx', 'lepton_pt', 'MET', 'jet12m', 'lepTm', 'hadTm'], axis=1)
-  eval_df = eval_df.drop(['nevt', 'file', 'GoodPV', 'EventCategory', 'EventWeight', 'genMatch',
-                          'njets', 'nbjets_m',
-                          'lepton_pt', 'lepton_eta', 'lepton_phi', 'MET', 'MET_phi', 'lepDPhi',
-                          'jet0phi', 'jet0csv', 'jet0cvsl', 'jet0cvsb', 'jet0Idx',
-                          'jet1phi', 'jet1csv', 'jet1cvsl', 'jet1cvsb', 'jet1Idx',
-                          'jet2phi', 'jet2csv', 'jet2cvsl', 'jet2cvsb', 'jet2Idx',
-                          'jet3phi', 'jet3csv', 'jet3cvsl', 'jet3cvsb', 'jet3Idx',
-                          'jet12phi', 'jet23phi', 'jet31phi',
-                          'lepWeta', 'lepWphi', 'lepTpt', 'lepTeta', 'lepTdeta', 'lepTphi', 'lepTdR',
-                          'hadTpt', 'hadTphi',
-                          ], axis=1)
-  eval_df.astype('float32')
-
-  eval_scaler = StandardScaler()
-  eval_scaler.fit(eval_df)
-  eval_df_sc = eval_scaler.transform(eval_df)
-  dim = 46
-  eval_pca = PCA(n_components=dim)
-  X = eval_pca.fit_transform(eval_df_sc)
-  y = parallel_model.predict(X)
-  y.dtype = [('KerasScore', np.float32)]
-  y = y[:,1]
-  array2tree(y, name='tree', tree=outtree)
-   
-  for colname, value in spectator.iteritems():
-    spect = spectator[colname].values
-    if colname == 'lepton_pt': branchname = 'lepPt'
-    elif colname == 'MET'    : branchname = 'missinget'
-    elif colname == 'jet12m' : branchname = 'whMass'
-    elif colname == 'lepTm'  : branchname = 'leptMass'
-    elif colname == 'hadTm'  : branchname = 'hadTm'
-    else: branchname = colname
-
-    if branchname in ['nevt', 'file', 'EventCategory', 'genMatch', 'jet0Idx', 'jet1Idx', 'jet2Idx', 'jet3Idx' ]: spect.dtype = [(branchname, np.int32)]
-    else:
-      spect.dtype = [(branchname, np.float32)]
-    #print(branchname)
-    #print(spect.shape)
-    array2tree(spect, name='tree', tree=outtree)
-
-  outtree.Fill()
-  outfile.Write()
-  outfile.Close()
