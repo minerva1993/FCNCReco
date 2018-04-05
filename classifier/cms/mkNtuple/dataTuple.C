@@ -130,6 +130,9 @@ Bool_t dataTuple::Process(Long64_t entry)
   fReader.SetEntry(entry);
   TString option = GetOption();
 
+  //Ntuple for ST, TT respectively
+  bool isTT = false;
+
   int mode = 999; 
   mode = *channel;
 
@@ -205,11 +208,15 @@ Bool_t dataTuple::Process(Long64_t entry)
   }
   njets = jetIdxs.size();
   const int nCombi = njets * (njets -1) * (njets -2) *(njets -3) / 2;
-  if ( nCombi < 12 ) return kTRUE;
+  const int nCombi_st = njets *  (njets -1) *(njets -2) / 2;
+  if ( isTT && nCombi < 12 ) return kTRUE;
+  if ( !isTT && nCombi_st < 3 ) return kTRUE;
 
+  if ( isTT ){
+    if ( njets <  4 || nbjets_m < 2 ) return kTRUE;
+  }
+  else if ( njets <  3 || nbjets_m < 2 ) return kTRUE;
 
-  if( njets <  4 || nbjets_m < 2 ) return kTRUE;
-  
   //cout << nevt << endl;
   if( option.Contains("Data") ) b_EventCategory = -1;
   else if( option.Contains("Hct") || option.Contains("Hut") ) b_EventCategory = 0;
@@ -253,23 +260,22 @@ Bool_t dataTuple::Process(Long64_t entry)
   //int count = 0;
   TLorentzVector jetP4[4];
   for ( auto ii0 = jetIdxs.begin(); ii0 != jetIdxs.end(); ++ii0 ){
-    //if ( (!option.Contains("Hct") && !option.Contains("Hut")) && jet_CSV[*ii0] < 0.8484 ) continue;
+    //if ( jet_CSV[*ii0] < 0.8484 ) continue;
     jetP4[0].SetPtEtaPhiE(jet_pT[*ii0], jet_eta[*ii0], jet_phi[*ii0], jet_E[*ii0]);
 
     for ( auto ii1 = jetIdxs.begin(); ii1 != jetIdxs.end(); ++ii1 ) {
       if ( *ii1 == *ii0 ) continue;
-      //if ( (!option.Contains("Hct") && !option.Contains("Hut")) && jet_CSV[*ii1] < 0.8484 ) continue;
-      jetP4[3].SetPtEtaPhiE(jet_pT[*ii1], jet_eta[*ii1], jet_phi[*ii1], jet_E[*ii1]);
+      //if ( jet_CSV[*ii1] < 0.8484 ) continue;
+      if ( isTT ) jetP4[3].SetPtEtaPhiE(jet_pT[*ii1], jet_eta[*ii1], jet_phi[*ii1], jet_E[*ii1]);
 
       for ( auto ii2 = jetIdxs.begin(); ii2 != jetIdxs.end(); ++ii2 ) {
-        if ( *ii2 == *ii0 or *ii2 == *ii1 ) continue;
-        //if ( (option.Contains("Hct") || option.Contains("Hut")) && jet_CSV[*ii2] < 0.8484 ) continue;//fcnc
+        if ( *ii2 == *ii0 ) continue;
+        if ( isTT && *ii2 == *ii1 ) continue;
         if ( jet_CSV[*ii2] < 0.8484 ) continue;
         jetP4[2].SetPtEtaPhiE(jet_pT[*ii2], jet_eta[*ii2], jet_phi[*ii2], jet_E[*ii2]);
 
         for ( auto ii3 = ii2+1; ii3 != jetIdxs.end(); ++ii3 ) {
           if ( *ii3 == *ii0 or *ii3 == *ii1 or *ii3 == *ii2 ) continue;
-          //if ( (option.Contains("Hct") || option.Contains("Hut")) && jet_CSV[*ii3] < 0.8484 ) continue;//fcnc
           if ( jet_CSV[*ii3] < 0.8484 ) continue;
           jetP4[1].SetPtEtaPhiE(jet_pT[*ii3], jet_eta[*ii3], jet_phi[*ii3], jet_E[*ii3]);
           //count++;
@@ -338,7 +344,7 @@ void dataTuple::Terminate()
   TString option = GetOption();
 
     //TFile *hfile = TFile::Open(Form("root://cms-xrdr.sdfarm.kr:1094//xrd/store/user/minerva1993/reco/ntuple/deepReco_%s.root",option.Data()), "RECREATE");
-    TFile *hfile = TFile::Open(Form("j4b2/deepReco_%s.root",option.Data()), "RECREATE");
+    TFile *hfile = TFile::Open(Form("j3b2_st/deepReco_%s.root",option.Data()), "RECREATE");
 
     fOutput->FindObject("test_tree")->Write();
 

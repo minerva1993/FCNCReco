@@ -18,8 +18,10 @@ void idxToNtuple::Loop()
   string fn = fChain->GetCurrentFile()->GetName();
   //string fn2 = "assign_" + fn.substr(73);
   //string pt = "root://cms-xrdr.sdfarm.kr:1094//xrd/store/user/minerva1993/reco/assign04/";
-  string fn2 = "assign_" + fn.substr(56);
-  string pt = "/home/minerva1993/recoFCNC/classifier/cms/assign04/";
+  //string fn2 = "assign_" + fn.substr(56);
+  //string pt = "/home/minerva1993/recoFCNC/classifier/cms/assign04/";
+  string fn2 = "assign_" + fn.substr(58);
+  string pt = "/home/minerva1993/recoFCNC/classifier/cms/assignST01/";
   string pt2 = pt + fn2;
   const char *path = pt2.c_str();
   TFile* fout = TFile::Open(path, "recreate");
@@ -63,7 +65,7 @@ void idxToNtuple::Loop()
     nb = fChain->GetEntry(jentry);   nbytes += nb;
     // if (Cut(ientry) < 0) continue;
 
-    if(genMatch%1000 == 111){
+    if(genMatch == 1011){
       tmpScoreDummy[nevt] = BDTScore;
       tmpMatchDummy[nevt] = genMatch;
     }
@@ -88,8 +90,8 @@ void idxToNtuple::Loop()
   int dummyCount = 0;
   for (int i = 0; i <= totevt; ++ i){
     //cout << "nevt = " << i << " and score = " << tmpScore[i] << " and jet indicies are " << tmpJetIdx[i][0] << ", " << tmpJetIdx[i][1] << ", " << mtmpJjetIdx[i][2] << ", " << tmpJetIdx[i][3] << " and gen match is " << tmpMatch[i] << endl;
-    if(tmpMatch[i]%1000 == 111) matchCount++;
-    if(tmpMatchDummy[i]%1000 == 111) dummyCount++;
+    if(tmpMatch[i] == 1011) matchCount++;
+    if(tmpMatchDummy[i] == 1011) dummyCount++;
   }
   cout <<  matchCount << " , " << dummyCount  << endl;
 

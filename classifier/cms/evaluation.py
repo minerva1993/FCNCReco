@@ -10,18 +10,20 @@ TMVA.Tools.Instance()
 #TMVA.PyMethodBase.PyInitialize()
 reader = TMVA.Reader("Color:!Silent")
 
-ver = sys.argv[1]
+#ver = sys.argv[1]
+ver = '01'
 filename = sys.argv[2]
 
 # Load data
 
 #data = TFile.Open('root://cms-xrdr.sdfarm.kr:1094//xrd/store/user/minerva1993/reco/ntuple/'+filename)
-data = TFile.Open('/home/minerva1993/recoFCNC/classifier/cms/mkNtuple/j4b2/'+filename)
+data = TFile.Open('/home/minerva1993/recoFCNC/classifier/cms/mkNtuple/j3b2_st/'+filename)
 data_tree = data.Get('test_tree')
 
 #target = TFile.Open('root://cms-xrdr.sdfarm.kr:1094//xrd/store/user/minerva1993/reco/score'+ver+'/score_'+filename,'RECREATE')
-target = TFile.Open('/home/minerva1993/recoFCNC/classifier/cms/scoreFCNC'+ver+'/score_'+filename,'RECREATE')
+#target = TFile.Open('/home/minerva1993/recoFCNC/classifier/cms/scoreFCNC'+ver+'/score_'+filename,'RECREATE')
 #target = TFile.Open('/home/minerva1993/recoFCNC/classifier/cms/scoreTT'+ver+'/score_'+filename,'RECREATE')
+target = TFile.Open('/home/minerva1993/recoFCNC/classifier/cms/scoreST'+ver+'/score_'+filename,'RECREATE')
 tree = TTree("tree","tree")
 
 branches = {}
@@ -46,6 +48,11 @@ for branch in data_tree.GetListOfBranches():
     "genHadW",
     "lepWeta", "lepTeta", "lepTdeta", "lepTdR",
     "hadTpt", "lepTpt",
+    "jet3pt", "jet3eta", "jet3m", #STFCNC
+    "jet23pt", "jet23eta", "jet23deta", "jet23dphi", "jet23dR", "jet23m", #STFCNC
+    "jet31pt", "jet31eta", "jet31deta", "jet31dphi", "jet31dR", "jet31m", #STFCNC
+    "hadTeta", "hadT12_3deta", "hadT23_1deta", "hadT31_2deta",#STFCNC
+    "hadT12_3dphi", "hadT23_1dphi", "hadT31_2dphi", "hadT12_3dR", "hadT23_1dR", "hadT31_2dR", "hadTm"#STFCNC
   ]:
       branches[branchName] = array('f', [-999])
       reader.AddVariable(branchName, branches[branchName])
@@ -55,7 +62,7 @@ for branch in data_tree.GetListOfBranches():
     branches[branchName] = array('f', [-999])
     reader.AddSpectator(branchName, branches[branchName])
 
-reader.BookMVA('BDT', TString('/home/minerva1993/recoFCNC/classifier/cms/training/deepReco'+ver+'/weights/TMVAClassification_BDT.weights.xml'))
+reader.BookMVA('BDT', TString('/home/minerva1993/recoFCNC/classifier/cms/training/deepRecoSTFCNC'+ver+'/weights/TMVAClassification_BDT.weights.xml'))
 
 totalevt = data_tree.GetEntries()
 #print("this sample contains "+str(totalevt)+" combinations")

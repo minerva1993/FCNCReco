@@ -16,11 +16,13 @@ You can use job.sh from legacy folders to write down out names as well as file p
 ```{.Bash}
 ssh compute-0-1 #(compute-0-2, compute-0-3)
 cd classifier/cms/mkNtuple
+##You MUST check OUTPUT directory
 python runother.py /data/users/minerva1993/ntuple_Run2016/v4/production SingleTbar_t Tree_ttbbLepJets_0.root tbarchannel_0 #check compile
 python runtt.py /data/users/minerva1993/ntuple_Run2016/v4/production TT_powheg_ttbj Tree_ttbbLepJets_0.root ttbj_0 #check compile
 cat fileList/file_other1.txt | xargs -i -P$(nproc) -n4 python runother.py
 cat fileList/file_other2.txt | xargs -i -P$(nproc) -n4 python runother.py
 cat fileList/file_tt.txt | xargs -i -P$(nproc) -n4 python runtt.py
+cat fileList/file_st.txt | xargs -i -P$(nproc) -n4 python runtt.py #for ST fcnc
 ```
 To make ttbar reco signals, change output directory in makeTuple.C, modify b tagging restrictions, and run
 ```{.Bash}
@@ -31,11 +33,13 @@ cat fileList/file_recoTTsig3.txt | xargs -i -P$(nproc) -n4 python runtt.py
 
   * Evaluate classifier
 ```{.Bash}
+#Make sure thar you're using correct file path in evaluation.py
 cd classifier/cms
 find mkNtuple/j4b2/*.root -type f -printf "04 %f\n" >> file_eval.txt #make another list containing classifier version and ntuple names
 cat fileList/file_eval1.txt | xargs -i -P$(nproc) -n2 python evaluation.py
 cat fileList/file_eval2.txt | xargs -i -P$(nproc) -n2 python evaluation.py
 cat fileList/file_eval3.txt | xargs -i -P$(nproc) -n2 python evaluation.py
+cat fileList/file_eval4.txt | xargs -i -P$(nproc) -n2 python evaluation.py
 ```
 
   * Assign best combinations
@@ -46,6 +50,7 @@ root -l run.C'("score_deepReco_ttbb_10.root")' #check the code!
 cat fileList/file_assign1.txt | xargs -i -P$(nproc) -n1 root -l -b run.C'("{}")'
 cat fileList/file_assign2.txt | xargs -i -P$(nproc) -n1 root -l -b run.C'("{}")'
 cat fileList/file_assign3.txt | xargs -i -P$(nproc) -n1 root -l -b run.C'("{}")'
+cat fileList/file_assign4.txt | xargs -i -P$(nproc) -n1 root -l -b run.C'("{}")'
 ```
 
   * Histograms

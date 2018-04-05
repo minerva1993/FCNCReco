@@ -8,7 +8,7 @@ void run( TString name )
 {
 
   //TFile *f = TFile::Open("root://cms-xrdr.sdfarm.kr:1094//xrd/store/user/minerva1993/reco/score04/"+name, "READ");
-  TFile *f = TFile::Open("/home/minerva1993/recoFCNC/classifier/cms/score04/"+name, "READ");
+  TFile *f = TFile::Open("/home/minerva1993/recoFCNC/classifier/cms/scoreST01/"+name, "READ");
   if (f->IsOpen()==kFALSE){
     f->Close();
     gSystem->Exit(0);
@@ -18,7 +18,7 @@ void run( TString name )
 
   TChain assign("tree");
   //assign.Add("root://cms-xrdr.sdfarm.kr:1094//xrd/store/user/minerva1993/reco/score04/"+name);
-  assign.Add("/home/minerva1993/recoFCNC/classifier/cms/score04/"+name);
+  assign.Add("/home/minerva1993/recoFCNC/classifier/cms/scoreST01/"+name);
 
   idxToNtuple t(&assign);
 

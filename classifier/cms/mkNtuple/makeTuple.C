@@ -351,6 +351,9 @@ Bool_t makeTuple::Process(Long64_t entry)
   fReader.SetEntry(entry);
   TString option = GetOption();
 
+  //Ntuple for ST, TT respectively
+  bool isTT = false;
+
   int mode = 999; 
   mode = *channel;
 
@@ -426,11 +429,15 @@ Bool_t makeTuple::Process(Long64_t entry)
   }
   njets = jetIdxs.size();
   const int nCombi = njets * (njets -1) * (njets -2) *(njets -3) / 2;
-  if ( nCombi < 12 ) return kTRUE;
+  const int nCombi_st = njets *  (njets -1) *(njets -2) / 2;
+  if ( isTT && nCombi < 12 ) return kTRUE;
+  if ( !isTT && nCombi_st < 3 ) return kTRUE;
 
+  if ( isTT ){
+    if ( njets <  4 || nbjets_m < 2 ) return kTRUE;
+  }
+  else if ( njets <  3 || nbjets_m < 2 ) return kTRUE;
 
-  if( njets <  4 || nbjets_m < 2 ) return kTRUE;
-  
   //cout << nevt << endl;
   if( option.Contains("Data") ) b_EventCategory = -1;
   else if( option.Contains("Hct") || option.Contains("Hut") ) b_EventCategory = 0;
@@ -461,36 +468,6 @@ Bool_t makeTuple::Process(Long64_t entry)
     gen_lepB.SetPtEtaPhiE(gencone_gjet_pT[0], gencone_gjet_eta[0], gencone_gjet_phi[0], gencone_gjet_E[0]);
   }
   else{
-  /*
-    //scan over the gen jets
-    vector<int> wPlusIdx;
-    vector<int> wMinusIdx;
-
-    for( unsigned int genIdx = 0; genIdx < genjet_E.GetSize(); ++genIdx ){
-      if( genjet_mom[genIdx] == 0 or *b_GenCone_NgJetsW != 2 ) continue;
-      if( gencone_gjetIndex[2] < 0 and gencone_gjetIndex[3] < 0 ) continue;
-      if( genjet_mom[genIdx] == 24 ){
-        wPlusIdx.push_back(genIdx);
-      }
-      if ( genjet_mom[genIdx] == -24 ) {//wMinusIdx.push_back(genIdx);
-        wMinusIdx.push_back(genIdx);
-      }
-    }
-    cout << wPlusIdx.size() << " " << wMinusIdx.size() << " " << wPlusIdx.size() +  wMinusIdx.size() << endl;
-
-    if( wPlusIdx.size() == 0 and wMinusIdx.size() == 2 ){
-      gen_hadJ2.SetPtEtaPhiE(genjet_pT[2* wMinusIdx[0]], genjet_eta[wMinusIdx[0]], genjet_phi[wMinusIdx[0]], genjet_E[wMinusIdx[0]]);
-      gen_hadJ3.SetPtEtaPhiE(genjet_pT[2* wMinusIdx[1]], genjet_eta[wMinusIdx[1]], genjet_phi[wMinusIdx[1]], genjet_E[wMinusIdx[1]]);
-    }
-    else if( wPlusIdx.size() == 2 and wMinusIdx.size() == 0 ){
-      gen_hadJ2.SetPtEtaPhiE(genjet_pT[2* wPlusIdx[0]], genjet_eta[wPlusIdx[0]], genjet_phi[wPlusIdx[0]], genjet_E[wPlusIdx[0]]);
-      gen_hadJ3.SetPtEtaPhiE(genjet_pT[2* wPlusIdx[1]], genjet_eta[wPlusIdx[1]], genjet_phi[wPlusIdx[1]], genjet_E[wPlusIdx[1]]);
-    }
-    //if( (wPlusIdx.size() == 0 and wMinusIdx.size() == 2) or ( wPlusIdx.size() == 2 and wMinusIdx.size() == 0) )cout << wPlusIdx.size()/2 +  wMinusIdx.size()/2  << endl;
-    //if(wPlusIdx.size()/2 +  wMinusIdx.size()/2 != 1) cout << wPlusIdx.size()/2 +  wMinusIdx.size()/2  << endl;
-    //cout << *b_GenCone_NgJetsW << endl;
-  */
-
     gen_hadJ2.SetPtEtaPhiE(gencone_gjet_pT[2], gencone_gjet_eta[2], gencone_gjet_phi[2], gencone_gjet_E[2]); //fcnc=>addHbjets
     gen_hadJ3.SetPtEtaPhiE(gencone_gjet_pT[3], gencone_gjet_eta[3], gencone_gjet_phi[3], gencone_gjet_E[3]);
 
@@ -536,26 +513,23 @@ Bool_t makeTuple::Process(Long64_t entry)
   //int count = 0;
   TLorentzVector jetP4[4];
   for ( auto ii0 = jetIdxs.begin(); ii0 != jetIdxs.end(); ++ii0 ){
-    //if ( (!option.Contains("Hct") && !option.Contains("Hut")) && jet_CSV[*ii0] < 0.8484 ) continue;
-    if ( jet_CSV[*ii0] < 0.8484 ) continue; //for ttbar reco signal
+    //if ( jet_CSV[*ii0] < 0.8484 ) continue; //for ttbar reco signal
     jetP4[0].SetPtEtaPhiE(jet_pT[*ii0], jet_eta[*ii0], jet_phi[*ii0], jet_E[*ii0]);
 
     for ( auto ii1 = jetIdxs.begin(); ii1 != jetIdxs.end(); ++ii1 ) {
       if ( *ii1 == *ii0 ) continue;
-      //if ( (!option.Contains("Hct") && !option.Contains("Hut")) && jet_CSV[*ii1] < 0.8484 ) continue;
-      if ( jet_CSV[*ii1] < 0.8484 ) continue; //for ttbar reco signal
-      jetP4[3].SetPtEtaPhiE(jet_pT[*ii1], jet_eta[*ii1], jet_phi[*ii1], jet_E[*ii1]);
+      //if ( jet_CSV[*ii1] < 0.8484 ) continue; //for ttbar reco signal
+      if ( isTT ) jetP4[3].SetPtEtaPhiE(jet_pT[*ii1], jet_eta[*ii1], jet_phi[*ii1], jet_E[*ii1]);
 
       for ( auto ii2 = jetIdxs.begin(); ii2 != jetIdxs.end(); ++ii2 ) {
-        if ( *ii2 == *ii0 or *ii2 == *ii1 ) continue;
-        //if ( (option.Contains("Hct") || option.Contains("Hut")) && jet_CSV[*ii2] < 0.8484 ) continue;//fcnc
-        //if ( jet_CSV[*ii2] < 0.8484 ) continue;
+        if ( *ii2 == *ii0 ) continue;
+        if ( isTT && *ii2 == *ii1) continue;
+        if ( jet_CSV[*ii2] < 0.8484 ) continue;
         jetP4[2].SetPtEtaPhiE(jet_pT[*ii2], jet_eta[*ii2], jet_phi[*ii2], jet_E[*ii2]);
 
         for ( auto ii3 = ii2+1; ii3 != jetIdxs.end(); ++ii3 ) {
           if ( *ii3 == *ii0 or *ii3 == *ii1 or *ii3 == *ii2 ) continue;
-          //if ( (option.Contains("Hct") || option.Contains("Hut")) && jet_CSV[*ii3] < 0.8484 ) continue;//fcnc
-          //if ( jet_CSV[*ii3] < 0.8484 ) continue;
+          if ( jet_CSV[*ii3] < 0.8484 ) continue;
           jetP4[1].SetPtEtaPhiE(jet_pT[*ii3], jet_eta[*ii3], jet_phi[*ii3], jet_E[*ii3]);
           //count++;
 
@@ -603,14 +577,22 @@ Bool_t makeTuple::Process(Long64_t entry)
           //if ( gen_lep.Pt()   > 0 and gen_lep.DeltaR(lepton)    < 0.1 ) b_genMatch += 100000;
           //if ( gen_nu.Pt()    > 0 and gen_nu.DeltaPhi(metP4)      < 0.1 ) b_genMatch += 10000;
           if ( gen_lepB.Pt()  > 0 and gen_lepB.DeltaR(jetP4[0])   < 0.4 ) b_genMatch += 1000;
-          if ( gen_hadJ1.Pt()  > 0 and gen_hadJ1.DeltaR(jetP4[3])  < 0.4 ) b_genMatch += 100;
+          if ( isTT ){
+            if ( gen_hadJ1.Pt()  > 0 and gen_hadJ1.DeltaR(jetP4[3])  < 0.4 ) b_genMatch += 100;
+          }
           if ( gen_hadJ2.Pt() > 0 and (gen_hadJ2.DeltaR(jetP4[1]) < 0.4 or gen_hadJ2.DeltaR(jetP4[2]) < 0.4) ) b_genMatch += 10;
           if ( gen_hadJ3.Pt() > 0 and (gen_hadJ3.DeltaR(jetP4[1]) < 0.4 or gen_hadJ3.DeltaR(jetP4[2]) < 0.4) ) b_genMatch += 1;
 
           testTree->Fill();
 
-          if ( b_genMatch == 1111 ) sigTree->Fill();
-          else bkgTree->Fill();
+          if ( isTT ){
+            if ( b_genMatch == 1111 ) sigTree->Fill();
+            else bkgTree->Fill();
+          }
+          else{
+            if ( b_genMatch == 1011 ) sigTree->Fill();
+            else bkgTree->Fill();
+          }
           //else continue;
 
         }
@@ -642,7 +624,7 @@ void makeTuple::Terminate()
 
     //TFile *hfile = TFile::Open(Form("root://cms-xrdr.sdfarm.kr:1094//xrd/store/user/minerva1993/reco/ntuple/deepReco_%s.root",option.Data()), "RECREATE");
     //TFile *hfile = TFile::Open(Form("j4b2/deepReco_%s.root",option.Data()), "RECREATE"); //FCNC
-    TFile *hfile = TFile::Open(Form("j4b2_tt/deepReco_%s.root",option.Data()), "RECREATE"); //ttbar
+    TFile *hfile = TFile::Open(Form("j3b2_st/deepReco_%s.root",option.Data()), "RECREATE"); //ttbar
 
     fOutput->FindObject("sig_tree")->Write();
     fOutput->FindObject("bkg_tree")->Write();

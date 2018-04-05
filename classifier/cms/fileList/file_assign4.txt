@@ -1,0 +1,12 @@
+score_deepReco_singleTop_Hct_0.root
+score_deepReco_singleTop_Hct_1.root
+score_deepReco_singleTop_Hct_2.root
+score_deepReco_singleTop_Hct_3.root
+score_deepReco_singleTop_Hct_4.root
+score_deepReco_singleTop_Hct_5.root
+score_deepReco_singleTop_Hut_0.root
+score_deepReco_singleTop_Hut_1.root
+score_deepReco_singleTop_Hut_2.root
+score_deepReco_singleTop_Hut_3.root
+score_deepReco_singleTop_Hut_4.root
+score_deepReco_singleTop_Hut_5.root
