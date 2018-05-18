@@ -38,15 +38,15 @@ l.SetFillColor(0);
 
 ##all histos with event selection!
 ###########################################################
-for ver in ["02",]:
-  out = TFile.Open('/home/minerva1993/fcnc/deepReco/cms/deepReco'+ver+'/output.root')
-  trainS = out.Get('deepReco'+ver+'/Method_BDT/BDT/MVA_BDT_Train_S')
-  trainB = out.Get('deepReco'+ver+'/Method_BDT/BDT/MVA_BDT_Train_B')
-  testS = out.Get('deepReco'+ver+'/Method_BDT/BDT/MVA_BDT_S')
-  testB = out.Get('deepReco'+ver+'/Method_BDT/BDT/MVA_BDT_B')
-  corrS = out.Get('deepReco'+ver+'/CorrelationMatrixS')
-  corrB = out.Get('deepReco'+ver+'/CorrelationMatrixB')
-  rocBDT = out.Get('deepReco'+ver+'/Method_BDT/BDT/MVA_BDT_rejBvsS')
+for ver in ["deepRecoSTFCNC01",]:
+  out = TFile.Open('/home/minerva1993/recoFCNC/classifier/cms/training/'+ver+'/output.root')
+  trainS = out.Get(ver+'/Method_BDT/BDT/MVA_BDT_Train_S')
+  trainB = out.Get(ver+'/Method_BDT/BDT/MVA_BDT_Train_B')
+  testS = out.Get(ver+'/Method_BDT/BDT/MVA_BDT_S')
+  testB = out.Get(ver+'/Method_BDT/BDT/MVA_BDT_B')
+  corrS = out.Get(ver+'/CorrelationMatrixS')
+  corrB = out.Get(ver+'/CorrelationMatrixB')
+  rocBDT = out.Get(ver+'/Method_BDT/BDT/MVA_BDT_rejBvsS')
 
   testS.SetStats(0)
   testS.SetTitle('')
@@ -82,47 +82,48 @@ for ver in ["02",]:
   label2.Draw('same')
   l.Draw('same')
   testS.Draw('axis same')
-  c1.Print('h_deepReco'+ver+'_BDT_score.pdf')
+  c1.Print(ver+'_BDT_score.pdf')
   l.Clear()
   label2.Clear()
   c1.Clear()
 
-  """
   #Correlation part
-  axislabel = ["# of jets", "# of b jets", "LepW pT", "LepW #eta", "LepW #Delta#dphi", "LepW mass", "jet0 pT", "jet0 #eta", "jet0 mass", "jet0 CSVv2", "jet0 CvsL", "jet0 CvsB", "jet1 pT", "jet1 #eta", "jet1 mass", "jet1 CSVv2", "jet1 CvsL", "jet1 CvsB", "jet2 pT", "jet2 #eta", "jet2 mass", "jet2 CSV", "jet2 CvsL", "jet2 CvsB", "jet3 pT", "jet3 #eta", "jet3 mass", "jet3 CSVv2", "jet3 CvsL", "jet3 CvsB", "jet12 pT", "jet12 #eta", "jet12 #Delta#eta", "jet12 #Delta#dphi", "jet12 mass", "jet12 #Delta R", "jet23 pT", "jet23 #eta", "jet23 #Delta#eta", "jet23 #Delta#phi", "jet23 mass", "jet31 pT", "jet31 #eta", "jet31 #Delta#eta", "jet31 #Delta#phi", "jet31 mass", "LepT pT", "LepT #eta", "LepT #Delta#eta", "LepT #Delta#phi", "LepT mass", "HadT pT", "HadT #eta", "HadT_Hq #Delta#eta", "HadT_Wb #Delta#eta", "HadT_Hq #Delta#phi", "HadT_Wb #Delta#phi", "HadT mass"]
+  #axislabel = ["# of jets", "# of b jets", "LepW pT", "LepW #eta", "LepW #Delta#dphi", "LepW mass", "jet0 pT", "jet0 #eta", "jet0 mass", "jet0 CSVv2", "jet0 CvsL", "jet0 CvsB", "jet1 pT", "jet1 #eta", "jet1 mass", "jet1 CSVv2", "jet1 CvsL", "jet1 CvsB", "jet2 pT", "jet2 #eta", "jet2 mass", "jet2 CSV", "jet2 CvsL", "jet2 CvsB", "jet3 pT", "jet3 #eta", "jet3 mass", "jet3 CSVv2", "jet3 CvsL", "jet3 CvsB", "jet12 pT", "jet12 #eta", "jet12 #Delta#eta", "jet12 #Delta#dphi", "jet12 mass", "jet12 #Delta R", "jet23 pT", "jet23 #eta", "jet23 #Delta#eta", "jet23 #Delta#phi", "jet23 mass", "jet31 pT", "jet31 #eta", "jet31 #Delta#eta", "jet31 #Delta#phi", "jet31 mass", "LepT pT", "LepT #eta", "LepT #Delta#eta", "LepT #Delta#phi", "LepT mass", "HadT pT", "HadT #eta", "HadT_Hq #Delta#eta", "HadT_Wb #Delta#eta", "HadT_Hq #Delta#phi", "HadT_Wb #Delta#phi", "HadT mass"]#TTFCNC,old
+  axislabel = ["jet0 pT", "jet0 #eta", "jet0 mass", "jet1 pT", "jet1 #eta", "jet1 mass", "jet2 pT", "jet2 #eta", "jet2 mass", "jet12 pT", "jet12 #eta", "jet12 #Delta#eta", "jet12 #Delta#dphi", "jet12 #Delta R", "jet12 mass", "LepW pT", "LepW #Delta#dphi", "LepW mass", "LepT #Delta#phi", "LepT mass", ]
 
   corrS.SetTitle('')
-  for i in range(0,58):
+  #for i in range(0,58):
+  for i in range(0,20):
     corrS.GetXaxis().SetBinLabel(i+1, axislabel[i])
     corrS.GetXaxis().LabelsOption("v");
     corrS.GetYaxis().SetBinLabel(i+1, axislabel[i])
-  corrS.GetXaxis().SetLabelSize(0.02)
-  corrS.GetYaxis().SetLabelSize(0.02)
-  corrS.GetZaxis().SetLabelSize(0.02)
+  corrS.GetXaxis().SetLabelSize(0.025)#0.02
+  corrS.GetYaxis().SetLabelSize(0.025)
+  corrS.GetZaxis().SetLabelSize(0.025)
   corrS.GetXaxis().SetLabelOffset(0.002)
   corrS.GetYaxis().SetLabelOffset(0.002)
   c1.SetGrid(1,1)
   corrS.Draw('colz')
   label.Draw('same')
-  c1.Print(ch+ver+'_corr_sig.pdf')
+  c1.Print(ver+'_corr_sig.pdf')
   c1.Clear()
 
   corrB.SetTitle('')
-  for i in range(0,58):
+  #for i in range(0,58):
+  for i in range(0,20):
     corrB.GetXaxis().SetBinLabel(i+1, axislabel[i])
     corrB.GetXaxis().LabelsOption("v");
     corrB.GetYaxis().SetBinLabel(i+1, axislabel[i])
-  corrB.GetXaxis().SetLabelSize(0.02)
-  corrB.GetYaxis().SetLabelSize(0.02)
-  corrB.GetZaxis().SetLabelSize(0.02)
+  corrB.GetXaxis().SetLabelSize(0.025)#0.02
+  corrB.GetYaxis().SetLabelSize(0.025)
+  corrB.GetZaxis().SetLabelSize(0.025)
   corrB.GetXaxis().SetLabelOffset(0.002)
   corrB.GetYaxis().SetLabelOffset(0.002)
   c1.SetGrid(1,1)
   corrS.Draw('colz')
   label.Draw('same')
-  c1.Print(ch+ver+'_corr_bkg.pdf')
+  c1.Print(ver+'_corr_bkg.pdf')
   c1.Clear()
-  """
 
 
   #ROC part
@@ -143,4 +144,4 @@ for ver in ["02",]:
   rocBDT.Draw('hist l')
   label.Draw('same')
   l2.Draw('same')
-  c1.Print('h_deepReco'+ver+'_roc.pdf')
+  c1.Print(ver+'_roc.pdf')

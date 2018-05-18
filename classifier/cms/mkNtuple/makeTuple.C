@@ -430,8 +430,8 @@ Bool_t makeTuple::Process(Long64_t entry)
   njets = jetIdxs.size();
   const int nCombi = njets * (njets -1) * (njets -2) *(njets -3) / 2;
   const int nCombi_st = njets *  (njets -1) *(njets -2) / 2;
-  if ( isTT && nCombi < 12 ) return kTRUE;
-  if ( !isTT && nCombi_st < 3 ) return kTRUE;
+  //if ( isTT && nCombi < 12 ) return kTRUE; //TT FCNC and TTbar is different!!
+  //if ( !isTT && nCombi_st < 3 ) return kTRUE;
 
   if ( isTT ){
     if ( njets <  4 || nbjets_m < 2 ) return kTRUE;
@@ -446,8 +446,8 @@ Bool_t makeTuple::Process(Long64_t entry)
   else if( option.Contains("ttcc") ) b_EventCategory = 3;
   else if( option.Contains("ttLF") ) b_EventCategory = 4;
   else if( option.Contains("ttother") ) b_EventCategory = 5;
-  else if( option.Contains("channel") ) b_EventCategory = 5; //singletop
-  else if( option.Contains("zjets") ) b_EventCategory = 6; //DY
+  else if( option.Contains("channel") ) b_EventCategory = 6; //singletop
+  else if( option.Contains("zjets") ) b_EventCategory = 7; //DY
   else b_EventCategory = 10;
 
   /////////////////////////////////////

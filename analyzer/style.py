@@ -29,14 +29,17 @@ gStyle.SetPadRightMargin(0.1)
 
 gStyle.SetTitleColor(1, "XYZ")
 gStyle.SetTitleFont(42, "XYZ")
-gStyle.SetTitleSize(0.1, "XYZ")
-gStyle.SetTitleXOffset(0.9)
-gStyle.SetTitleYOffset(1.4)
+gStyle.SetTitleSize(0.035, "XYZ")
+gStyle.SetTitleXOffset(1.1)
+gStyle.SetTitleYOffset(1.55)
 
 gStyle.SetLabelColor(1, "XYZ")
 gStyle.SetLabelFont(42, "XYZ")
 gStyle.SetLabelOffset(0.007, "XYZ")
-gStyle.SetLabelSize(0.04, "XYZ")
+gStyle.SetLabelSize(0.035, "XYZ")
+
+gStyle.SetLegendTextSize(0.035)
+gStyle.SetLegendBorderSize(0)
 
 gStyle.SetErrorX(0)
 gROOT.ForceStyle()

@@ -22,3 +22,5 @@ hadd hist_zjets10to50V2.root temp/hist_zjets10to50V2_*.root
 hadd hist_ww.root temp/hist_ww_*.root
 hadd hist_wz.root temp/hist_wz_*.root
 hadd hist_zz.root temp/hist_zz_*.root
+hadd hist_singleTopHct.root temp/hist_singleTopHct_*.root
+hadd hist_singleTopHut.root temp/hist_singleTopHut_*.root

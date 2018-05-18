@@ -27,29 +27,31 @@ from keras.callbacks import Callback
 bestModel = sys.argv[1]
 ver = '02'
 configDir = '/home/minerva1993/deepReco/'
+weightDir = 'recoTT'
+scoreDir = 'scoreTT'
 
-if not os.path.exists(configDir+'score'+ver):
-  os.makedirs(configDir+'score'+ver)
+if not os.path.exists(configDir+scoreDir+ver):
+  os.makedirs(configDir+scoreDir+ver)
 
-test = os.listdir(configDir+'score'+ver)
+test = os.listdir(configDir+scoreDir+ver)
 for item in test:
   if item.endswith(".root"):
-      os.remove(os.path.join(configDir+'score_mva/'+ver, item))
+      os.remove(os.path.join(configDir+scoreDir+ver, item))
 
 print('Start evaluation on '+ver+' samples with the model '+bestModel)
 
 #for filename in os.listdir("/home/minerva1993/deepReco/j4b2_tt"):
-for filename in os.listdir("/home/minerva1993/deepReco/j4b2_tt/eff"):
-  model_best = load_model(configDir+'recoTT'+ver+'/'+bestModel)
+for filename in os.listdir(configDir+"j4b2_tt/eff"):
+  model_best = load_model(configDir+weightDir+ver+'/'+bestModel)
   print('model is loaded')
-  infile = TFile.Open('/home/minerva1993/deepReco/j4b2_tt/'+filename)
+  infile = TFile.Open(configDir+'j4b2_tt/'+filename)
   print('processig '+filename)
   intree = infile.Get('test_tree')
   inarray = tree2array(intree)
   eval_df = pd.DataFrame(inarray)
   print(eval_df.shape)
 
-  outfile = TFile.Open('scoreTT'+ver+'/score_'+filename,'RECREATE')
+  outfile = TFile.Open(scoreDir+ver+'/score_'+filename,'RECREATE')
   outtree = TTree("tree","tree")
 
   spectator = eval_df.filter(['nevt', 'file', 'EventCategory', 'genMatch', 'jet0Idx', 'jet1Idx', 'jet2Idx', 'jet3Idx', 'lepton_pt', 'MET', 'jet12m', 'lepTm', 'hadTm'], axis=1)

@@ -10,7 +10,7 @@ fout = TFile("output.root","recreate")
 
 factory = TMVA.Factory("TMVAClassification", fout, "!V:!Silent:Color:DrawProgressBar:AnalysisType=Classification" )
 
-loader = TMVA.DataLoader("deepRecoFCNC04")
+loader = TMVA.DataLoader("deepReco05")
 #loader.AddVariable("njets", "I")
 #loader.AddVariable("nbjets_m",'I')
 loader.AddVariable("jet0pt",'F')

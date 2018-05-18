@@ -52,7 +52,7 @@ for branch in data_tree.GetListOfBranches():
     "jet23pt", "jet23eta", "jet23deta", "jet23dphi", "jet23dR", "jet23m", #STFCNC
     "jet31pt", "jet31eta", "jet31deta", "jet31dphi", "jet31dR", "jet31m", #STFCNC
     "hadTeta", "hadT12_3deta", "hadT23_1deta", "hadT31_2deta",#STFCNC
-    "hadT12_3dphi", "hadT23_1dphi", "hadT31_2dphi", "hadT12_3dR", "hadT23_1dR", "hadT31_2dR", "hadTm"#STFCNC
+    "hadT12_3dphi", "hadT23_1dphi", "hadT31_2dphi", "hadT12_3dR", "hadT23_1dR", "hadT31_2dR", "hadTm",#STFCNC
   ]:
       branches[branchName] = array('f', [-999])
       reader.AddVariable(branchName, branches[branchName])

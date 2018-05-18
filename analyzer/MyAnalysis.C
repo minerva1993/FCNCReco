@@ -49,7 +49,7 @@ void MyAnalysis::SlaveBegin(TTree * /*tree*/)
     h_MET[ich][i]->Sumw2();
     fOutput->Add(h_MET[ich][i]);
 
-    h_LepPt[ich][i] = new TH1D(Form("h_LepPt_Ch%i_S%i_%s",ich,i,sample.c_str()), "Lepton p_{T}", 30,0,300);
+    h_LepPt[ich][i] = new TH1D(Form("h_LepPt_Ch%i_S%i_%s",ich,i,sample.c_str()), "Lepton p_{T}", 40,0,200);
     h_LepPt[ich][i]->SetXTitle("Lepton p_{T} (GeV)");
     h_LepPt[ich][i]->Sumw2();
     fOutput->Add(h_LepPt[ich][i]);
@@ -79,7 +79,7 @@ void MyAnalysis::SlaveBegin(TTree * /*tree*/)
     h_DPhi[ich][i]->Sumw2();
     fOutput->Add(h_DPhi[ich][i]);
 
-    h_LepIso[ich][i] = new TH1D(Form("h_LepIso_Ch%i_S%i_%s",ich,i,sample.c_str()), "LepIso", 20 ,0 ,0.2);
+    h_LepIso[ich][i] = new TH1D(Form("h_LepIso_Ch%i_S%i_%s",ich,i,sample.c_str()), "LepIso", 20 ,0 ,0.15);
     h_LepIso[ich][i]->SetXTitle("Relative Isolation");
     h_LepIso[ich][i]->Sumw2();
     fOutput->Add(h_LepIso[ich][i]);
@@ -109,7 +109,7 @@ void MyAnalysis::SlaveBegin(TTree * /*tree*/)
     h_FCNHkinHadWMass[ich][i]->Sumw2();
     fOutput->Add(h_FCNHkinHadWMass[ich][i]);
 
-    h_FCNHkinHMass[ich][i] = new TH1D(Form("h_FCNHkinHMass_Ch%i_S%i_%s",ich,i,sample.c_str()), "Higgs Mass (bb)", 30, 0,300);
+    h_FCNHkinHMass[ich][i] = new TH1D(Form("h_FCNHkinHMass_Ch%i_S%i_%s",ich,i,sample.c_str()), "Higgs Mass (bb)", 30, 0,250);
     h_FCNHkinHMass[ich][i]->SetXTitle("Higgs Mass (GeV)");
     h_FCNHkinHMass[ich][i]->Sumw2();
     fOutput->Add(h_FCNHkinHMass[ich][i]);
@@ -188,7 +188,8 @@ void MyAnalysis::SlaveBegin(TTree * /*tree*/)
   }
 
   //assignF = TFile::Open(Form("root://cms-xrdr.sdfarm.kr:1094//xrd/store/user/minerva1993/reco/assign04/assign_deepReco_%s.root", option.Data()), "READ");
-  assignF = TFile::Open(Form("/home/minerva1993/recoFCNC/classifier/cms/assign04/assign_deepReco_%s.root", option.Data()), "READ");
+  //assignF = TFile::Open(Form("/home/minerva1993/recoFCNC/classifier/cms/assign04/assign_deepReco_%s.root", option.Data()), "READ");
+  assignF = TFile::Open(Form("/home/minerva1993/recoFCNC/classifier/cms/assignST01/assign_deepReco_%s.root", option.Data()), "READ");
   assignT = (TTree*) assignF->Get("tree");
   int nevt = assignT->GetEntries();
   if( nevt > 0){
@@ -317,7 +318,8 @@ Bool_t MyAnalysis::Process(Long64_t entry)
   //Jet Assignment
   vector<double>::iterator iter;
   int evtIdx = 0;
-  if( njets >= 4 && nbjets_m >= 2 && !lepPt.empty() ){
+  //if( njets >= 4 && nbjets_m >= 2 && !lepPt.empty() ){
+  if( njets >= 3 && nbjets_m >= 2 && !lepPt.empty() ){
     for( iter = lepPt.begin(); iter != lepPt.end(); iter++){
       if( *iter == static_cast<float>(lepton.Pt()) ){
         int tmpIdx = distance(lepPt.begin(), iter);
@@ -357,7 +359,7 @@ Bool_t MyAnalysis::Process(Long64_t entry)
   int Ncuts = 11;
   bool eventSelection[Ncuts];
   for(unsigned int bcut=0; bcut < Ncuts; bcut++) eventSelection[bcut] = false;
-
+/*
   eventSelection[0] = true;
   eventSelection[1] = ( njets >= 4 );
   eventSelection[2] = ( njets >= 4 ) && ( nbjets_m == 2 );
@@ -369,6 +371,19 @@ Bool_t MyAnalysis::Process(Long64_t entry)
   eventSelection[8] = ( njets >= 6 ) && ( nbjets_m == 3 );
   eventSelection[9] = ( njets >= 6 ) && ( nbjets_m == 2 || nbjets_m == 3 );
   eventSelection[10] = ( njets >= 6 ) && ( nbjets_m >= 3 );
+*/
+  eventSelection[0] = true;
+  eventSelection[1] = ( njets >= 3 );
+  eventSelection[2] = ( njets >= 3 ) && ( nbjets_m == 2 );
+  eventSelection[3] = ( njets >= 3 ) && ( nbjets_m == 3 );
+  eventSelection[4] = ( njets >= 3 ) && ( nbjets_m >= 2 );
+  eventSelection[5] = ( njets >= 3 ) && ( nbjets_m >= 3 );
+  eventSelection[6] = ( njets >= 4 );
+  eventSelection[7] = ( njets >= 4 ) && ( nbjets_m == 2 ); 
+  eventSelection[8] = ( njets >= 4 ) && ( nbjets_m == 3 );
+  eventSelection[9] = ( njets >= 4 ) && ( nbjets_m == 4 );
+  eventSelection[10] = ( njets >= 4 ) && ( nbjets_m >= 3 );
+
 
   for( int cut = 0; cut < 11; cut++){
     if(eventSelection[cut]){
@@ -384,8 +399,8 @@ Bool_t MyAnalysis::Process(Long64_t entry)
       h_DPhi[mode][cut]->Fill(lepDphi, EventWeight);
       h_LepIso[mode][cut]->Fill(relIso, EventWeight);
 
-      if( njets >=4 && nbjets_m >=2 ){
-        for( int i = 0; i < 4; ++i ){
+      if( njets >=3 && nbjets_m >=2 ){
+        for( int i = 0; i < 3; ++i ){
           const size_t j = jetIdx[i];
           h_csvv2[mode][cut]->Fill(jet_CSV[j],EventWeight);
           h_cvsl[mode][cut]->Fill(jet_CvsL[j],EventWeight);
@@ -414,8 +429,8 @@ Bool_t MyAnalysis::Process(Long64_t entry)
         h_genDR[mode][cut]->Fill(gendR, EventWeight);
         h_genHm[mode][cut]->Fill(genHm, EventWeight);
         if(match1 && match2){
-          h_matchDR[mode][cut]->Fill(gendR, EventWeight);
-          h_matchHm[mode][cut]->Fill(genHm, EventWeight);
+          h_matchDR[mode][cut]->Fill(jetP4s[1].DeltaR(jetP4s[2]), EventWeight);
+          h_matchHm[mode][cut]->Fill((jetP4s[1]+jetP4s[2]).M(), EventWeight);
         }
       }
     }

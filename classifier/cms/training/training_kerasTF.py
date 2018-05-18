@@ -27,15 +27,17 @@ from keras.callbacks import Callback, ModelCheckpoint
 
 ver = '04'
 configDir = '/home/minerva1993/deepReco/'
+weightDir = 'recoTT'
+scoreDir = 'scoreTT'
 
-if not os.path.exists(configDir+'recoTT'+ver):
-  os.makedirs(configDir+'recoTT'+ver)
-if not os.path.exists(configDir+'scoreTT'+ver):
-  os.makedirs(configDir+'scoreTT'+ver)
-test = os.listdir(configDir+'recoTT'+ver)
+if not os.path.exists(configDir+weightDir+ver):
+  os.makedirs(configDir+weightDir+ver)
+if not os.path.exists(configDir+scoreDir+ver):
+  os.makedirs(configDir+scoreDir+ver)
+test = os.listdir(configDir+weightDir+ver)
 for item in test:
   if item.endswith(".pdf") or item.endswith(".h5") or item.endswith("log"):
-    os.remove(os.path.join(configDir+'recoTT'+ver, item))
+    os.remove(os.path.join(configDir+weightDir+ver, item))
 
 
 #######################
@@ -72,11 +74,11 @@ def correlations(data, name, **kwds):
     plt.tight_layout()
     #plt.show()
     if name == 'sig':
-      plt.savefig(configDir+'recoTT'+ver+'/fig_corr_s.pdf')
+      plt.savefig(configDir+weightDir+ver+'/fig_corr_s.pdf')
       print('Correlation matrix for signal is saved!')
       plt.gcf().clear() 
     elif name == 'bkg':
-      plt.savefig(configDir+'recoTT'+ver+'/fig_corr_b.pdf')
+      plt.savefig(configDir+weightDir+ver+'/fig_corr_b.pdf')
       plt.gcf().clear() 
       print('Correlation matrix for background is saved!')
     else: print('Wrong class name!')
@@ -102,7 +104,7 @@ def inputvars(sigdata, bkgdata, signame, bkgname, **kwds):
       plt.ylabel('A.U.')
       plt.title('Intput variables')
       plt.legend(loc='upper right')
-      plt.savefig(configDir+'recoTT'+ver+'/fig_'+colname+'.pdf')
+      plt.savefig(configDir+weightDir+ver+'/fig_input_'+colname+'.pdf')
       plt.gcf().clear()
       plt.close()
 
@@ -164,7 +166,7 @@ class roc_callback(Callback):
       plt.xlabel('Signal Efficiency')
       plt.ylabel('Background Rejection')
       plt.title('ROC Curve')
-      roc_path = configDir+'recoTT'+ver+'/fig_roc_%d_%.4f.pdf' %(epoch+1,round(roc_val,4))
+      roc_path = configDir+weightDir+ver+'/fig_roc_%d_%.4f.pdf' %(epoch+1,round(roc_val,4))
       plt.savefig(roc_path)
       plt.gcf().clear()
 
@@ -200,7 +202,7 @@ class roc_callback(Callback):
       plt.xlabel("Deep Learning Score")
       plt.ylabel("Arbitrary units")
       plt.legend(loc='best')
-      overtrain_path = configDir+'recoTT'+ver+'/fig_overtraining_%d_%.4f.pdf' %(epoch+1,round(roc_val,4))
+      overtrain_path = configDir+weightDir+ver+'/fig_overtraining_%d_%.4f.pdf' %(epoch+1,round(roc_val,4))
       plt.savefig(overtrain_path)
       plt.gcf().clear()
       print('ROC curve and overtraining check plots are saved!')
@@ -211,7 +213,7 @@ class roc_callback(Callback):
       #Save single gpu model manually
       ###############################
       modelfile = 'model_%d_%.4f.h5' %(epoch+1,round(roc_val,4))
-      self.model_to_save.save(configDir+'recoTT'+ver+'/'+modelfile)
+      self.model_to_save.save(configDir+weightDir+ver+'/'+modelfile)
       print('Current model is saved')
 
       return
@@ -230,11 +232,11 @@ data = pd.read_hdf('./ntuples/ttbarJetCombinations.h5')
 #print(daaxis=data.index.is_unique)#check if indices are duplicated
 data["genMatch"] = (data['genMatch'] == 1111).astype(int)
 data = shuffle(data)
-NumEvt = data['genMatch'].value_counts()
+NumEvt = data['genMatch'].value_counts(sort=True, ascending=True)
 #print(NumEvt)
 print('bkg/sig events : '+ str(NumEvt.tolist()))
 data = data.drop(data.query('genMatch < 1').sample(frac=.91, axis=0).index)
-NumEvt2 = data['genMatch'].value_counts()
+NumEvt2 = data['genMatch'].value_counts(sort=True, ascending=True)
 #print(NumEvt2)
 print('bkg/sig events after bkg skim : '+ str(NumEvt2.tolist()))
 
@@ -398,14 +400,14 @@ parallel_model.compile(loss='binary_crossentropy', optimizer=Adam(lr=1E-3, beta_
 #parallel_model.summary()
 
 modelfile = 'model_{epoch:02d}_{val_binary_accuracy:.4f}.h5'
-checkpoint = ModelCheckpoint(configDir+'recoTT'+ver+'/'+modelfile, monitor='val_binary_accuracy', verbose=1, save_best_only=False)#, mode='max')
+checkpoint = ModelCheckpoint(configDir+weightDir+ver+'/'+modelfile, monitor='val_binary_accuracy', verbose=1, save_best_only=False)#, mode='max')
 history = parallel_model.fit(X_train, Y_train, 
                              epochs=50, batch_size=4000, 
                              validation_data=(X_test, Y_test), 
                              #class_weight={ 0: 14, 1: 1 }, 
                              callbacks=[roc_callback(training_data=(X_train, Y_train), validation_data=(X_test, Y_test), model=model)]
                              )
-model.save(configDir+'recoTT'+ver+'/model.h5')#save template model, rather than the model returned by multi_gpu_model.
+model.save(configDir+weightDir+ver+'/model.h5')#save template model, rather than the model returned by multi_gpu_model.
 
 
 #print(history.history.keys())
@@ -415,7 +417,7 @@ plt.title('model accuracy')
 plt.ylabel('accuracy')
 plt.xlabel('epoch')
 plt.legend(['train', 'test'], loc='lower right')
-plt.savefig(configDir+'recoTT'+ver+'/fig_accuracy.pdf')
+plt.savefig(configDir+weightDir+ver+'/fig_accuracy.pdf')
 plt.gcf().clear() 
 
 plt.plot(history.history['loss'])
@@ -424,5 +426,5 @@ plt.title('binary crossentropy')
 plt.ylabel('loss')
 plt.xlabel('epoch')
 plt.legend(['train', 'test'], loc='upper right')
-plt.savefig(configDir+'recoTT'+ver+'/fig_loss.pdf')
+plt.savefig(configDir+weightDir+ver+'/fig_loss.pdf')
 plt.gcf().clear() 
